@@ -10,7 +10,7 @@ const count = ref(0);
 
 <template>
   <div
-    class="overflow-hidden bg-white shadow-lg rounded-lg border p-2 cursor-grab active:cursor-grabbing"
+    class="overflow-y-auto mb-[120px] bg-white shadow-lg rounded-lg border p-2 cursor-grab active:cursor-grabbing"
   >
     <div class="flex flex-col px-6 mt-7 w-full">
       <div class="self-start text-2xl leading-none text-zinc-900">
@@ -85,7 +85,7 @@ const count = ref(0);
   </div>
 
   <div
-    class="flex z-10 flex-col justify-center px-5 pt-6 pb-12 -mt-11 w-full text-2xl leading-none text-center text-white whitespace-nowrap bg-white shadow-sm"
+    class="h-[120px] fixed bottom-0 left-0 w-full flex flex-col justify-center px-5 pt-6 pb-12 -mt-11 w-full text-2xl leading-none text-center text-white whitespace-nowrap bg-white shadow-sm"
   >
     <button
       class="overflow-hidden gap-2.5 self-stretch px-6 py-3 rounded-lg border-4 border-solid bg-zinc-900 border-zinc-900"
