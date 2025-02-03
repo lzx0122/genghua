@@ -104,3 +104,13 @@ button:focus-visible {
 ::-webkit-scrollbar-track {
   box-shadow: transparent;
 }
+
+a {
+  text-decoration: none; /* 刪除下劃線 */
+  color: inherit; /* 繼承父元素的顏色 */
+}
+
+a:hover {
+  text-decoration: none; /* 確保懸停時沒有下劃線 */
+  color: inherit; /* 保持懸停時顏色不變 */
+}
