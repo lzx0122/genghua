@@ -11,6 +11,7 @@ const {
   addDoc,
   deleteDoc,
   updateDoc,
+  Timestamp,
 } = require("firebase/firestore");
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -34,6 +35,39 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 let model = {
+  async addUser(account, name, date, email, desc) {
+    try {
+      if (account === null || account.trim() === "") {
+        throw new Error("用戶電話不可為空");
+      }
+
+      if (name === null || name.trim() === "") {
+        throw new Error("用戶姓名不可為空");
+      }
+
+      if (await this.getUserByAccount(account)) {
+        throw new Error("此電話已存在");
+      }
+      const docRef = await addDoc(collection(db, "User"), {
+        Account: account,
+        Name: name,
+        Date: Timestamp.fromMillis(date),
+        Email: email,
+        Desc: desc,
+      });
+
+      return {
+        id: docRef.id,
+        Account: account,
+        Name: name,
+        Date: Timestamp.fromMillis(date),
+        Email: email,
+        Desc: desc,
+      };
+    } catch (e) {
+      throw new Error("新增客戶資料失敗：" + e.message);
+    }
+  },
   async getAllUsers() {
     try {
       const querySnapshot = await getDocs(collection(db, "User")); // 獲取 user 集合中的所有
@@ -72,11 +106,53 @@ let model = {
       for (const doc of queryKeep.docs) {
         // 取得 keep
         let item = await this.getItemById(doc.data().ItemId);
+        delete item.Desc;
         keeps.push({ id: doc.id, ...doc.data(), Item: item });
       }
 
       let doc = querySnapshot.docs[0];
+
       return { id: doc.id, ...doc.data(), Keeps: keeps }; // 返回用戶資料陣列
+    } catch (e) {
+      throw new Error("getUserByAccount() error\n" + e.message);
+    }
+  },
+  async getUsersByDate(date) {
+    try {
+      const q = query(
+        collection(db, "User"),
+        where("Date", ">=", Timestamp.fromMillis(date * 1000)),
+        where("Date", "<", Timestamp.fromMillis((date + 1) * 1000))
+      );
+      // 獲取符合條件的文檔
+      const querySnapshot = await getDocs(q);
+      // 檢查是否找到任何文檔
+      if (querySnapshot.empty) {
+        return null;
+      }
+      let users = [];
+
+      querySnapshot.forEach((doc) => {
+        users.push({ id: doc.id, ...doc.data() }); // 將每個文件的資料推入陣列中
+      });
+
+      for (const [index, user] of users.entries()) {
+        //取得客戶寄放商品
+        const q2 = query(
+          collection(db, "Keep"),
+          where("Account", "==", user.Account)
+        );
+        const queryKeep = await getDocs(q2);
+        let keeps = [];
+        for (const doc of queryKeep.docs) {
+          // 取得 keep
+          let item = await this.getItemById(doc.data().ItemId);
+          keeps.push({ id: doc.id, ...doc.data(), Item: item });
+        }
+        users[index].Keeps = keeps;
+      }
+
+      return users; // 返回用戶資料陣列
     } catch (e) {
       throw new Error("getUserByAccount() error\n" + e.message);
     }
@@ -91,7 +167,7 @@ let model = {
       const queryLogs = await getDocs(q);
       let logos = [];
       for (const doc of queryLogs.docs) {
-        // 取得 keep
+        // 取得 logs
         logos.push({ id: doc.id, ...doc.data() });
       }
 
@@ -187,9 +263,7 @@ let model = {
   },
   async updateItem(id, itemId, name) {
     try {
-      console.log(itemId);
       let data = await this.getItemById(itemId);
-      console.log(data);
       if (data && data.id != id && data.ItemId == itemId) {
         throw new Error("此產品ID 已存在");
       }
@@ -212,6 +286,108 @@ let model = {
       return true;
     } catch (e) {
       throw new Error("刪除商品資料失敗：" + e.message);
+    }
+  },
+  //keep
+  async addKeep(account, adminId, itemId, amount, date) {
+    try {
+      if (!(await this.getUserByAccount(account))) {
+        throw new Error("此用戶不存在");
+      }
+      if (!(await this.getItemById(itemId))) {
+        throw new Error("此商品ID不存在");
+      }
+
+      const docRef = await addDoc(collection(db, "Keep"), {
+        Account: account,
+        AdminId: adminId,
+        ItemId: itemId,
+        Amount: parseInt(amount),
+        Date: Timestamp.fromMillis(date),
+        PickUp: [],
+      });
+
+      return {
+        id: docRef.id,
+        Account: account,
+        AdminId: adminId,
+        ItemId: itemId,
+        Amount: parseInt(amount),
+        Date: Timestamp.fromMillis(date),
+        PickUp: [],
+      };
+    } catch (e) {
+      throw new Error("新增寄放商品資料失敗：" + e.message);
+    }
+  },
+  async deleteKeep(id) {
+    try {
+      const itemRef = doc(db, "Keep", id); // 指向要刪除的文檔
+      await deleteDoc(itemRef); // 刪除文檔
+
+      return true;
+    } catch (e) {
+      throw new Error("刪除商品資料失敗：" + e.message);
+    }
+  },
+  async updateKeep(id, itemId, amount) {
+    try {
+      if (!(await this.getItemById(itemId))) {
+        throw new Error("此商品ID不存在");
+      }
+      const itemRef = doc(db, "Keep", id);
+      await updateDoc(itemRef, { ItemId: itemId, Amount: amount });
+
+      return {
+        id: id,
+        ItemID: itemId,
+        Amount: amount,
+      };
+    } catch (e) {
+      throw new Error("更新寄放商品資料失敗：" + e.message);
+    }
+  },
+  //keep pickup
+  async addKeepPickup(id, date, adminId) {
+    try {
+      const docRef = doc(db, "Keep", id);
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists()) {
+        throw new Error("此Keep ID不存在");
+      }
+      let data = docSnap.data();
+
+      data.Pickup.push({ Date: Timestamp.fromMillis(date), AdminId: adminId });
+      await updateDoc(docRef, {
+        Pickup: data.Pickup, // 新後的 Pickup
+      });
+      return {
+        id: docRef.id,
+        ...data,
+      };
+    } catch (e) {
+      throw new Error("新增寄放商品領取紀錄失敗：" + e.message);
+    }
+  },
+  async deleteKeepPickup(id, index) {
+    try {
+      const docRef = doc(db, "Keep", id);
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists()) {
+        throw new Error("此Keep ID不存在");
+      }
+      let data = docSnap.data();
+
+      data.Pickup.splice(index, 1);
+      await updateDoc(docRef, {
+        Pickup: data.Pickup, // 新後的 Pickup
+      });
+      return {
+        id: docRef.id,
+        ...data,
+      };
+    } catch (e) {
+      throw new Error("刪除寄放商品領取紀錄失敗：" + e.message);
     }
   },
 };

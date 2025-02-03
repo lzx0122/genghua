@@ -22,15 +22,16 @@ router.post("/login", async function (req, res, next) {
     let { adminId, password } = req.body;
     let data = await coffeModel.loginAdmin(adminId, password);
 
-    if (data) {
+    if (data && data.Password == password) {
       delete data.Password;
       req.session.adminId = data.AdminId;
     } else {
       res.clearCookie("connect.sid");
+      return res.status(401).send("帳號密碼錯誤");
     }
     res.status(200).send({ ...data });
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).send(err.message);
   }
 });
 
