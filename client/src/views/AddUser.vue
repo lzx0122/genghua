@@ -9,9 +9,7 @@ const count = ref(0);
 </script>
 
 <template>
-  <div
-    class="overflow-y-auto mb-[120px] bg-white shadow-lg rounded-lg border p-2 cursor-grab active:cursor-grabbing"
-  >
+  <div>
     <div class="flex flex-col px-6 mt-7 w-full">
       <div class="self-start text-2xl leading-none text-zinc-900">
         輸入顧客資訊
