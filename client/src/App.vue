@@ -4,7 +4,9 @@ import AddUser from "./views/AddUser.vue";
 </script>
 
 <template>
-  <div class="flex flex-col mx-auto w-full bg-white max-w-[480px]">
+  <div
+    class="w-screen h-screen flex overflow-hidden flex-col mx-auto w-full bg-white"
+  >
     <div
       class="flex gap-5 justify-between items-start pt-6 pr-2 pb-3 pl-6 w-full text-center whitespace-nowrap bg-white shadow-sm text-zinc-900"
     >
