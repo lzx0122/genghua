@@ -41,7 +41,9 @@ const count = ref(0);
             class="flex shrink-0 gap-2.5 py-3 mt-2 h-12 bg-white rounded border-2 border-solid border-zinc-900"
           />
         </div>
-        <div class="flex flex-col mt-4 w-full rounded-lg max-w-[335px]">
+        <div
+          class="flex flex-col mt-4 w-full rounded-lg max-w-[335px] text-zinc-900"
+        >
           <label
             for="birthdateInput"
             class="self-start text-lg leading-loose text-zinc-900"
