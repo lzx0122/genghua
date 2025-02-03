@@ -55,11 +55,8 @@ const toggleMenuHandler = () => {
         </ul>
       </div>
     </div>
-    <div
-      class="overflow-y-auto mb-[120px] mt-[110px] bg-white shadow-lg rounded-lg border p-2 cursor-grab active:cursor-grabbing"
-    >
-      <router-view></router-view>
-    </div>
+
+    <router-view></router-view>
   </div>
 </template>
 
