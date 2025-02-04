@@ -1,8 +1,11 @@
 <script setup>
 import { useAuthStore } from "../stores/Auth";
+import { useToast } from "vue-toastification";
 import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
+import axios from "axios";
+const toast = useToast();
 const router = useRouter();
 const store = useAuthStore();
 const { fetchUser } = store;
@@ -17,8 +20,71 @@ onMounted(async () => {
   }
 });
 
-const addUserHandler = () => {
+const addUserHandler = async () => {
   console.log(userData.value);
+  if (
+    userData.value.name.trim().length <= 0 ||
+    !/^09[0-9]{8}$/.test(userData.value.account) ||
+    userData.value.date.length == 0
+  ) {
+    toast.error("請檢查 名稱、電話、生日 是否正確", {
+      position: "top-center",
+      timeout: 5000,
+      closeOnClick: true,
+      pauseOnFocusLoss: true,
+      pauseOnHover: true,
+      draggable: true,
+      draggablePercent: 0.6,
+      showCloseButtonOnHover: false,
+      hideProgressBar: true,
+      closeButton: "button",
+      icon: true,
+      rtl: false,
+    });
+    return;
+  }
+
+  try {
+    userData.value.date = new Date(userData.value.date).getTime();
+    const res = await axios.post(
+      "/coffee/admin/user",
+      { ...userData.value },
+      { withCredentials: true }
+    );
+
+    toast.success("新增成功", {
+      position: "top-center",
+      timeout: 5000,
+      closeOnClick: true,
+      pauseOnFocusLoss: true,
+      pauseOnHover: true,
+      draggable: true,
+      draggablePercent: 0.6,
+      showCloseButtonOnHover: false,
+      hideProgressBar: true,
+      closeButton: "button",
+      icon: true,
+      rtl: false,
+    });
+  } catch (err) {
+    console.log(err);
+    if (err.response?.status === 500) {
+      toast.error(err.response.data, {
+        position: "top-center",
+        timeout: 5000,
+        closeOnClick: true,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        draggable: true,
+        draggablePercent: 0.6,
+        showCloseButtonOnHover: false,
+        hideProgressBar: true,
+        closeButton: "button",
+        icon: true,
+        rtl: false,
+      });
+    }
+  }
 };
 </script>
 
@@ -33,7 +99,7 @@ const addUserHandler = () => {
           class="flex justify-between items-start max-w-full text-lg leading-loose whitespace-nowrap text-zinc-900 w-[335px]"
         >
           <div class="flex flex-col rounded min-w-[240px] w-[335px]">
-            <label for="nameInput" class="self-start">名稱(可暱稱)</label>
+            <label for="nameInput" class="self-start">名稱(可暱稱)*</label>
             <input
               type="text"
               id="nameInput"
@@ -46,7 +112,7 @@ const addUserHandler = () => {
         <div
           class="flex flex-col mt-4 w-full text-lg leading-loose rounded max-w-[335px] text-zinc-900"
         >
-          <label for="phoneInput" class="self-start">會員 (電話)</label>
+          <label for="phoneInput" class="self-start">會員 (電話)*</label>
           <input
             type="tel"
             id="phoneInput"
@@ -61,7 +127,7 @@ const addUserHandler = () => {
           <label
             for="birthdateInput"
             class="self-start text-lg leading-loose text-zinc-900"
-            >生日(月日就好 年隨便填)</label
+            >生日(月日就好 年隨便填)*</label
           >
           <div
             class="flex gap-2 items-start px-3.5 py-3 mt-2 bg-white rounded-lg border-2 border-solid border-zinc-900"
