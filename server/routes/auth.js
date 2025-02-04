@@ -14,7 +14,7 @@ async function verifyAdmin(req, res, next) {
 }
 
 router.get("/", verifyAdmin, function (req, res, next) {
-  console.log("auth Session:", req.session);
+
   if (!req.session.adminId) return res.status(401).send("session過期");
   res
     .status(200)

@@ -22,7 +22,12 @@ app.use(
     resave: false,
     saveUninitialized: false,
     name: "genghua",
-    cookie: { maxAge: 30 * 60 * 1000 }, // 設定 cookie 有效時間為 30 分鐘
+    cookie: {
+      secure: true, // 🔥 只允許 HTTPS 環境傳遞 Cookies
+      httpOnly: true,
+      sameSite: "lax", maxAge: 30 * 60 * 1000
+    }, // 設定 cookie 有效時間為 30 分鐘
+
   })
 );
 app.use(logger("dev"));
