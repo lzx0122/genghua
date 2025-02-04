@@ -14,6 +14,7 @@ async function verifyAdmin(req, res, next) {
 }
 
 router.get("/", verifyAdmin, function (req, res, next) {
+  console.log("auth Session:", req.session);
   if (!req.session.adminId) return res.status(401).send("session過期");
   res
     .status(200)
@@ -29,7 +30,7 @@ router.post("/login", async function (req, res, next) {
       delete data.Password;
       req.session.adminId = data.AdminId;
       req.session.name = data.Name;
-      return res.status(200).send({ ...data });
+      return res.status(200).send({ adminId: data.AdminId, name: data.Name });
     }
 
     res.clearCookie("connect.sid");
@@ -41,8 +42,14 @@ router.post("/login", async function (req, res, next) {
 
 router.get("/logout", async function (req, res, next) {
   try {
-    res.clearCookie("connect.sid");
-    res.status(200).send("登出成功");
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).send("登出失敗");
+      }
+
+      res.clearCookie("genghua");
+      res.status(200).send("登出成功");
+    });
   } catch (err) {
     res.status(500).send(err);
   }

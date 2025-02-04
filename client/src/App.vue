@@ -1,9 +1,35 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
+import { onMounted } from "vue";
+import { useAuthStore } from "./stores/Auth";
+import { useDataStore } from "./stores/Data";
+const DataStore = useDataStore();
+const { Title } = storeToRefs(DataStore);
+
+const router = useRouter();
+const AuthStore = useAuthStore();
+const { fetchUser, logout } = AuthStore;
+const { User } = storeToRefs(AuthStore);
 const toggleMenu = ref(false);
+
+onMounted(async () => {
+  await fetchUser();
+});
 
 const toggleMenuHandler = () => {
   toggleMenu.value = !toggleMenu.value;
+};
+
+const loginHandler = async () => {
+  if (!User.value) {
+    return router.push({ path: "/Auth" });
+  }
+
+  if (await logout()) {
+    return router.push({ path: "/User/Search" });
+  }
 };
 </script>
 
@@ -23,28 +49,27 @@ const toggleMenuHandler = () => {
           alt=""
           @click="toggleMenuHandler"
         />
-        <div class="mt-4 text-2xl leading-none">新增顧客</div>
+        <div class="mt-4 text-2xl leading-none">{{ Title }}</div>
         <div class="flex flex-col text-sm tracking-wide leading-none">
           <img
             loading="lazy"
             src="https://cdn.builder.io/api/v1/image/assets/TEMP/27277a8596d4744ec4110b3d027c5c95bfd926359dabe4cc3a34fb01b3b7c10f?placeholderIfAbsent=true&apiKey=1658e52805814928b66db3bf763c83c5"
-            class="object-contain self-center w-6 aspect-square"
+            class="cursor-pointer object-contain self-center w-6 aspect-square"
             alt="User avatar"
+            @click="loginHandler"
           />
-          <div>廖子翔</div>
+          <div>{{ User?.name }}</div>
         </div>
       </div>
 
       <div v-if="toggleMenu" class="w-full text-left" id="navbar-hamburger">
         <ul class="flex ml-[10px] flex-col font-medium mt-4 rounded-lg">
           <li>
-            <div>查詢寄放商品</div>
+            <router-link to="/User/Search">顧客查詢</router-link>
           </li>
-          <hr />
-          <li class="text-xl font-semibold">
-            <router-link to="/Auth">登入</router-link>
-          </li>
-          <li>
+          <li></li>
+          <hr v-if="User" />
+          <li v-if="User">
             <div class="text-xl font-semibold">管理</div>
             <ul class="flex ml-[10px] flex-col font-medium mt-1 rounded-lg">
               <li>

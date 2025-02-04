@@ -13,6 +13,7 @@ router.get("/", function (req, res, next) {
 router.get("/user/:userId", async function (req, res, next) {
   try {
     let { userId } = req.params;
+    console.log(userId);
     let data = await coffeModel.getUserByAccount(userId);
     delete data.Desc;
     res.status(200).send(data);
