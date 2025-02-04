@@ -1,10 +1,8 @@
-import AddUser from "../views/AddUser.vue";
-import {
-  createRouter,
-  createWebHistory,
-  createWebHashHistory,
-} from "vue-router";
-const routes = [{ path: "/Admin/AddUser", component: AddUser }];
+import { createRouter, createWebHistory } from "vue-router";
+const routes = [
+  { path: "/Admin/AddUser", component: () => import("../views/AddUser.vue") },
+  { path: "/Auth", component: () => import("../views/Auth.vue") },
+];
 
 const router = createRouter({
   history: createWebHistory(),

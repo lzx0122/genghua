@@ -41,6 +41,9 @@ const toggleMenuHandler = () => {
             <div>查詢寄放商品</div>
           </li>
           <hr />
+          <li class="text-xl font-semibold">
+            <router-link to="/Auth">登入</router-link>
+          </li>
           <li>
             <div class="text-xl font-semibold">管理</div>
             <ul class="flex ml-[10px] flex-col font-medium mt-1 rounded-lg">

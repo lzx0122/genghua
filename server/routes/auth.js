@@ -14,7 +14,10 @@ async function verifyAdmin(req, res, next) {
 }
 
 router.get("/", verifyAdmin, function (req, res, next) {
-  res.send("各位帥哥美女，管理辛苦了，需要來點咖啡嗎🤗☕️");
+  if (!req.session.adminId) return res.status(401).send("session過期");
+  res
+    .status(200)
+    .send({ adminId: req.session.adminId, name: req.session.name });
 });
 
 router.post("/login", async function (req, res, next) {
@@ -25,11 +28,12 @@ router.post("/login", async function (req, res, next) {
     if (data && data.Password == password) {
       delete data.Password;
       req.session.adminId = data.AdminId;
-    } else {
-      res.clearCookie("connect.sid");
-      return res.status(401).send("帳號密碼錯誤");
+      req.session.name = data.Name;
+      return res.status(200).send({ ...data });
     }
-    res.status(200).send({ ...data });
+
+    res.clearCookie("connect.sid");
+    return res.status(401).send("帳號密碼錯誤");
   } catch (err) {
     res.status(500).send(err.message);
   }

@@ -1,11 +1,13 @@
 <script setup>
-import { ref } from "vue";
-
-defineProps({
-  msg: String,
+import { useAuthStore } from "../stores/Auth";
+import { onMounted } from "vue";
+import { storeToRefs } from "pinia";
+const store = useAuthStore();
+const { fetchUsers } = store;
+const { User } = storeToRefs(store);
+onMounted(() => {
+  fetchUsers();
 });
-
-const count = ref(0);
 </script>
 
 <template>
