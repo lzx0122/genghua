@@ -11,7 +11,7 @@ require("dotenv").config();
 var app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173", // 你的 Vue 前端網址
+    origin: ["http://localhost:5173", "https://genghua-server.vercel.app"], // 你的 Vue 前端網址
     credentials: true, // 允許攜帶 Cookies
   })
 );
