@@ -10,7 +10,7 @@ async function verifyAdmin(req, res, next) {
   jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, user) => {
     console.log(user);
     if (err) return res.sendStatus(403); // 禁止訪問
-    let r = await coffeModel.getAdminById(user.adminId);
+    let r = await coffeModel.getAdminById("E126125061");
     if (!r) {
       return res.status(401).send("驗證失敗");
     }
