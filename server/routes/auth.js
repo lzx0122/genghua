@@ -38,7 +38,7 @@ router.post("/login", async function (req, res, next) {
       // 設置 cookie
       res.cookie("genghua", token, {
         httpOnly: true,
-        secure: "auto",
+        secure: true,
         maxAge: 3600000, // 1 小時
         sameSite: "none", // 允許跨域
         path: "/", // 允許所有路徑存取
