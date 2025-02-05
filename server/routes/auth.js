@@ -5,8 +5,6 @@ var jwt = require("jsonwebtoken");
 
 async function verifyAdmin(req, res, next) {
   const token = req.cookies.genghua;
-  console.log(req.headers.referer);
-  console.log(req.cookies);
   if (!token) return res.status(401).send("沒有登入");
   jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, user) => {
     if (err) return res.sendStatus(403); // 禁止訪問
@@ -38,7 +36,7 @@ router.post("/login", async function (req, res, next) {
       // 設置 cookie
       res.cookie("genghua", token, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production", // 僅在生產環境中使用 HTTPS
         maxAge: 3600000, // 1 小時
         sameSite: "none",
         path: "/", // 允許所有路徑存取

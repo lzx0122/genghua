@@ -12,7 +12,7 @@ var app = express();
 app.set("trust proxy", 1);
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://genghua-coffee-app.vercel.app"], // 你的 Vue 前端網址
+    origin: ["https://genghua-coffee-app.vercel.app", "http://localhost:5173"], // 你的 Vue 前端網址
     credentials: true, // 允許攜帶 Cookies
   })
 );

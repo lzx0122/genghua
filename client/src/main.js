@@ -9,7 +9,7 @@ import "vue-loading-overlay/dist/css/index.css";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 axios.defaults.baseURL = "https://genghua-coffee-server.vercel.app";
-axios.defaults.baseURL = "http://localhost:3000";
+//axios.defaults.baseURL = "http://localhost:3000";
 axios.defaults.withCredentials = true;
 createApp(App)
   .use(Toast)
