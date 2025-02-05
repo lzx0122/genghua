@@ -16,6 +16,7 @@ app.use(
     credentials: true, // 允許攜帶 Cookies
   })
 );
+app.options("*", cors()); // 處理預檢請求
 
 app.use(cookieParser());
 
