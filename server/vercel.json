@@ -1,4 +1,10 @@
 {
   "builds": [{ "src": "app.js", "use": "@vercel/node" }],
-  "routes": [{ "src": "(.*)", "dest": "app.js" }]
+  "routes": [{ "src": "(.*)", "dest": "app.js" }],
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://genghua-coffee-server.vercel.app/:path*"
+    }
+  ]
 }
