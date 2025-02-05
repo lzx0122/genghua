@@ -1,11 +1,11 @@
 var express = require("express");
 var coffeModel = require("../models/").coffee;
 var router = express.Router();
-var jwt = require('jsonwebtoken');
+var jwt = require("jsonwebtoken");
 
 async function verifyAdmin(req, res, next) {
   const token = req.cookies.genghua;
-  console.log(req.headers.referer)
+  console.log(req.headers.referer);
   if (!token) return res.status(401).send("沒有登入");
   jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, user) => {
     if (err) return res.sendStatus(403); // 禁止訪問
@@ -20,11 +20,8 @@ async function verifyAdmin(req, res, next) {
 }
 
 router.get("/", verifyAdmin, function (req, res, next) {
-
   if (!req.user.adminId) return res.status(401).send("session過期");
-  res
-    .status(200)
-    .send({ adminId: req.user.adminId, name: req.user.name });
+  res.status(200).send({ adminId: req.user.adminId, name: req.user.name });
 });
 
 router.post("/login", async function (req, res, next) {
@@ -33,20 +30,20 @@ router.post("/login", async function (req, res, next) {
     let data = await coffeModel.loginAdmin(adminId, password);
 
     if (data && data.Password == password) {
-      const user = { adminId: data.AdminId, name: data.Name }
-      const token = jwt.sign(user, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+      const user = { adminId: data.AdminId, name: data.Name };
+      const token = jwt.sign(user, process.env.JWT_SECRET_KEY, {
+        expiresIn: "1h",
+      });
       // 設置 cookie
-      res.cookie('genghua', token, {
+      res.cookie("genghua", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // 僅在生產環境中使用 HTTP
+        secure: process.env.NODE_ENV === "production", // 僅在生產環境中使用 HTTP
         maxAge: 3600000, // 1 小時
-        sameSite: 'None', // 允許跨域傳送 Cookies
-        path: '/' // 確保所有路徑都可以存取此 Cookie
+        path: "/", // 確保所有路徑都可以存取此 Cookie
       });
 
       return res.status(200).send(user);
     }
-
 
     return res.status(401).send("帳號密碼錯誤");
   } catch (err) {
