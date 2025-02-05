@@ -8,32 +8,30 @@ import { useAuthStore } from "./stores/Auth";
 import { useDataStore } from "./stores/Data";
 const toast = useToast();
 const DataStore = useDataStore();
-const { Title } = storeToRefs(DataStore);
+const { Title, ToggleMenu } = storeToRefs(DataStore);
 
 const router = useRouter();
 const AuthStore = useAuthStore();
 const { fetchUser, logout } = AuthStore;
 const { User } = storeToRefs(AuthStore);
-const toggleMenu = ref(false);
 
 onMounted(async () => {
   await fetchUser();
 });
 
 const toggleMenuHandler = () => {
-  toggleMenu.value = !toggleMenu.value;
+  ToggleMenu.value = !ToggleMenu.value;
 };
 
 const loginHandler = async () => {
   if (!User.value) {
     return router.push({ path: "/Auth" });
   }
-  
+
   if (logout()) {
-    
     toast.success("登出成功 掰掰😩", {
       position: "top-center",
-      timeout: 5000,
+      timeout: 3000,
       closeOnClick: true,
       pauseOnFocusLoss: true,
       pauseOnHover: true,
@@ -57,7 +55,7 @@ const loginHandler = async () => {
       class="fixed top-0 left-0 w-full flex flex-col z-10 gap-5 justify-between items-start pt-6 pr-2 pb-3 pl-6 w-full text-center whitespace-nowrap bg-white shadow-sm text-zinc-900 transition-all duration-300 ease-out"
     >
       <div
-        class="flex gap-5 justify-between items-start pt-6 pr-2 pb-3 pl-6 w-full text-center"
+        class="flex gap-5 justify-between items-start pt-6 pr-2 pl-6 w-full text-center"
       >
         <img
           loading="lazy"
@@ -79,21 +77,23 @@ const loginHandler = async () => {
         </div>
       </div>
 
-      <div v-if="toggleMenu" class="w-full text-left" id="navbar-hamburger">
+      <div v-if="ToggleMenu" class="w-full text-left" id="navbar-hamburger">
         <ul class="flex ml-[10px] flex-col font-medium mt-4 rounded-lg">
-          <li>
-            <router-link to="/User/Search">顧客查詢</router-link>
+          <li class="mb-[10px] flex items-center">
+            <router-link to="/User/Search">會員查詢</router-link>
           </li>
           <li></li>
           <hr v-if="User" />
           <li v-if="User">
             <div class="text-xl font-semibold">管理</div>
             <ul class="flex ml-[10px] flex-col font-medium mt-1 rounded-lg">
-              <li>
+              <li class="mt-[10px] flex items-center">
                 <router-link to="/Admin/AddUser">新增客戶</router-link>
               </li>
-              <li>
-                <div>查詢寄放商品</div>
+              <li class="mt-[10px] flex items-center">
+                <router-link to="/Admin/SearchUser"
+                  >會員查詢頁面(管理)</router-link
+                >
               </li>
             </ul>
           </li>

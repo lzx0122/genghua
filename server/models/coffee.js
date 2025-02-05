@@ -34,6 +34,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+
+function formatDate(timestamp) {
+  const date = new Date(parseInt(timestamp));
+
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${month}-${day}`;
+}
+
 let model = {
   async addUser(account, name, date, email, desc) {
     try {
@@ -54,6 +63,7 @@ let model = {
         Date: Timestamp.fromMillis(date),
         Email: email,
         Desc: desc,
+        MonthDay: formatDate(date)
       });
 
       return {
@@ -121,8 +131,7 @@ let model = {
     try {
       const q = query(
         collection(db, "User"),
-        where("Date", ">=", Timestamp.fromMillis(date * 1000)),
-        where("Date", "<", Timestamp.fromMillis((date + 1) * 1000))
+        where("MonthDay", "==", formatDate(date))
       );
       // 獲取符合條件的文檔
       const querySnapshot = await getDocs(q);

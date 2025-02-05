@@ -13,8 +13,9 @@ router.get("/", function (req, res, next) {
 router.get("/user/:userId", async function (req, res, next) {
   try {
     let { userId } = req.params;
-    console.log(userId);
     let data = await coffeModel.getUserByAccount(userId);
+
+    if (!data) return res.status(404).send("沒有查詢到此會員");
     delete data.Desc;
     res.status(200).send(data);
   } catch (err) {
@@ -56,6 +57,7 @@ router.get(
     try {
       let { account } = req.params;
       let data = await coffeModel.getUserByAccount(account);
+      if (!data) return res.status(404).send("沒有查詢到此會員");
       data = await coffeModel.getUserAndLogsByUserData(data);
       res.status(200).send(data);
     } catch (err) {

@@ -20,7 +20,7 @@ const loginHandler = async () => {
   if (password.value.length > 8 || adminId.value.length != 10) {
     toast.error("密碼不可大於8 或 員編錯誤", {
       position: "top-center",
-      timeout: 5000,
+      timeout: 3000,
       closeOnClick: true,
       pauseOnFocusLoss: true,
       pauseOnHover: true,
@@ -42,7 +42,7 @@ const loginHandler = async () => {
     await login(adminId.value, password.value);
     toast.success(`${User.value?.name} 您好！🫡`, {
       position: "top-center",
-      timeout: 5000,
+      timeout: 3000,
       closeOnClick: true,
       pauseOnFocusLoss: true,
       pauseOnHover: true,
@@ -58,7 +58,7 @@ const loginHandler = async () => {
   } catch (e) {
     toast.error(e.message, {
       position: "top-center",
-      timeout: 5000,
+      timeout: 3000,
       closeOnClick: true,
       pauseOnFocusLoss: true,
       pauseOnHover: true,

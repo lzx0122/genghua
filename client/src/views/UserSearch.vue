@@ -13,7 +13,7 @@ const SearchUserHandle = async () => {
   if (account.value.length < 10 || !/^09[0-9]{8}$/.test(account.value)) {
     toast.error("電話號碼格式錯誤", {
       position: "top-center",
-      timeout: 5000,
+      timeout: 3000,
       closeOnClick: true,
       pauseOnFocusLoss: true,
       pauseOnHover: true,
@@ -28,14 +28,32 @@ const SearchUserHandle = async () => {
     return;
   }
   isLoading.value = true;
-  await GetUserSearchData(account.value);
-  isLoading.value = false;
+  try {
+    await GetUserSearchData(account.value);
+  } catch (e) {
+    toast.error(e, {
+      position: "top-center",
+      timeout: 3000,
+      closeOnClick: true,
+      pauseOnFocusLoss: true,
+      pauseOnHover: true,
+      draggable: true,
+      draggablePercent: 0.6,
+      showCloseButtonOnHover: false,
+      hideProgressBar: true,
+      closeButton: "button",
+      icon: true,
+      rtl: false,
+    });
+  } finally {
+    isLoading.value = false;
+  }
 };
 </script>
 
 <template>
   <label
-    class="flex overflow-hidden mx-auto mt-[120px] gap-3 items-center p-3 mt-2 w-full text-lg tracking-normal leading-none text-center whitespace-nowrap bg-white rounded-lg border-solid border-[3px] border-zinc-900 max-w-[335px] text-zinc-400 cursor-pointer"
+    class="flex mx-auto mt-[120px] gap-3 items-center p-3 mt-2 w-full text-lg tracking-normal leading-none text-center whitespace-nowrap bg-white rounded-lg border-solid border-[3px] border-zinc-900 max-w-[335px] text-zinc-400 cursor-pointer"
     tabindex="0"
     role="button"
   >
@@ -68,7 +86,7 @@ const SearchUserHandle = async () => {
       :loader="'Bars'"
     />
     <div
-      class="mt-5 flex flex-col items-center min-h-[758px] w-full max-w-[335px] flex-col text-zinc-800"
+      class="flex flex-col items-center min-h-[758px] w-full max-w-[335px] flex-col text-zinc-800"
     >
       <div v-if="UserSearchData" class="flex w-full flex-col rounded-none">
         <div
@@ -77,12 +95,7 @@ const SearchUserHandle = async () => {
           <div class="flex gap-6 text-center whitespace-nowrap">
             <div class="my-auto text-2xl">{{ UserSearchData.Name }}</div>
             <div class="basis-auto text-3xl">
-              {{
-                new Date(UserSearchData.Date.seconds * 1000).toLocaleDateString(
-                  "zh-TW",
-                  { month: "long", day: "numeric" }
-                )
-              }}
+              {{ UserSearchData.MonthDay }}
             </div>
           </div>
           <div

@@ -10,18 +10,11 @@ const router = useRouter();
 const store = useAuthStore();
 const { fetchUser } = store;
 const { User } = storeToRefs(store);
+const isLoading = ref(false);
 
 const userData = ref({ account: "", name: "", date: "", email: "", desc: "" });
-onMounted(async () => {
-  //let res = await fetchUser();
-
-  // if (User.value == null || res?.status == 401) {
-  //   return router.push({ path: "/User/Search" });
-  // }
-});
 
 const addUserHandler = async () => {
-  console.log(userData.value);
   if (
     userData.value.name.trim().length <= 0 ||
     !/^09[0-9]{8}$/.test(userData.value.account) ||
@@ -29,7 +22,7 @@ const addUserHandler = async () => {
   ) {
     toast.error("請檢查 名稱、電話、生日 是否正確", {
       position: "top-center",
-      timeout: 5000,
+      timeout: 3000,
       closeOnClick: true,
       pauseOnFocusLoss: true,
       pauseOnHover: true,
@@ -46,6 +39,7 @@ const addUserHandler = async () => {
 
   try {
     userData.value.date = new Date(userData.value.date).getTime();
+    isLoading.value = true;
     const res = await axios.post(
       "/coffee/admin/user",
       { ...userData.value },
@@ -54,7 +48,7 @@ const addUserHandler = async () => {
 
     toast.success("新增成功", {
       position: "top-center",
-      timeout: 5000,
+      timeout: 3000,
       closeOnClick: true,
       pauseOnFocusLoss: true,
       pauseOnHover: true,
@@ -71,7 +65,7 @@ const addUserHandler = async () => {
     if (err.response?.status === 500) {
       toast.error(err.response.data, {
         position: "top-center",
-        timeout: 5000,
+        timeout: 3000,
         closeOnClick: true,
         pauseOnFocusLoss: true,
         pauseOnHover: true,
@@ -84,16 +78,28 @@ const addUserHandler = async () => {
         rtl: false,
       });
     }
+  } finally {
+    isLoading.value = false;
   }
 };
 </script>
 
 <template>
+  <Loading
+    :active.sync="isLoading"
+    :is-full-page="true"
+    :can-cancel="true"
+    :color="'oklch(0.21 0.006 285.885)'"
+    :background-color="'rgb(255, 255, 255)'"
+    :height="128"
+    :width="128"
+    :loader="'Bars'"
+  />
   <div
     class="overflow-y-auto mb-[120px] mt-[110px] bg-white shadow-lg rounded-lg border p-2"
   >
     <div class="flex flex-col items-center px-6 mt-7 w-full">
-      <div class="self-start text-2xl w-auto text-zinc-900">輸入顧客資料</div>
+      <div class="self-start text-2xl w-auto text-zinc-900">輸入會員資料</div>
       <form class="flex flex-col mt-3.5 w-auto min-h-[622px]">
         <div
           class="flex justify-between items-start max-w-full text-lg leading-loose whitespace-nowrap text-zinc-900 w-[335px]"
@@ -164,7 +170,7 @@ const addUserHandler = async () => {
           <label for="notesInput" class="self-start">備註(可不填)</label>
           <textarea
             id="notesInput"
-            placeholder="輸入顧客的備註(顧客看不到)"
+            placeholder="輸入會員的備註(會員看不到)"
             class="flex shrink-0 gap-2.5 mt-2 bg-white rounded border-2 border-solid border-zinc-900 h-[119px]"
             v-model="userData.desc"
           ></textarea>
