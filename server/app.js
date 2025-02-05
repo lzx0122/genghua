@@ -11,10 +11,7 @@ require("dotenv").config();
 var app = express();
 
 app.use(
-  cors({
-    origin: ["https://genghua-coffee-app.vercel.app", "http://localhost:5173"], // 你的 Vue 前端網址
-    credentials: true, // 允許攜帶 Cookies
-  })
+  cors()
 );
 app.options("*", cors()); // 處理預檢請求
 app.use((req, res, next) => {
