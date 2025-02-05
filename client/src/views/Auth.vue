@@ -40,7 +40,7 @@ const loginHandler = async () => {
   }
   try {
     await login(adminId.value, password.value);
-    toast.success(`${User.value.name} 您好！🫡`, {
+    toast.success(`${User.value?.name} 您好！🫡`, {
       position: "top-center",
       timeout: 5000,
       closeOnClick: true,
