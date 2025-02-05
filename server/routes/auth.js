@@ -40,6 +40,7 @@ router.post("/login", async function (req, res, next) {
         httpOnly: true,
         secure: true,
         maxAge: 3600000, // 1 小時
+        sameSite: "none",
         path: "/", // 允許所有路徑存取
       });
 
