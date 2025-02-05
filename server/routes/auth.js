@@ -39,7 +39,9 @@ router.post("/login", async function (req, res, next) {
       res.cookie('genghua', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production', // 僅在生產環境中使用 HTTP
-        maxAge: 3600000 // 1 小時
+        maxAge: 3600000, // 1 小時
+        sameSite: 'None', // 允許跨域傳送 Cookies
+        path: '/' // 確保所有路徑都可以存取此 Cookie
       });
 
       return res.status(200).send(user);
