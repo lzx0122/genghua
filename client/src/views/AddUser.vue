@@ -13,11 +13,11 @@ const { User } = storeToRefs(store);
 
 const userData = ref({ account: "", name: "", date: "", email: "", desc: "" });
 onMounted(async () => {
-  let res = await fetchUser();
+  //let res = await fetchUser();
 
-  if (User.value == null || res?.status == 401) {
-    return router.push({ path: "/User/Search" });
-  }
+  // if (User.value == null || res?.status == 401) {
+  //   return router.push({ path: "/User/Search" });
+  // }
 });
 
 const addUserHandler = async () => {

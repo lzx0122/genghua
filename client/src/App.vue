@@ -1,10 +1,12 @@
 <script setup>
+import { useToast } from "vue-toastification";
 import { ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { onMounted } from "vue";
 import { useAuthStore } from "./stores/Auth";
 import { useDataStore } from "./stores/Data";
+const toast = useToast();
 const DataStore = useDataStore();
 const { Title } = storeToRefs(DataStore);
 
@@ -26,8 +28,23 @@ const loginHandler = async () => {
   if (!User.value) {
     return router.push({ path: "/Auth" });
   }
-
-  if (await logout()) {
+  
+  if (logout()) {
+    
+    toast.success("登出成功 掰掰😩", {
+      position: "top-center",
+      timeout: 5000,
+      closeOnClick: true,
+      pauseOnFocusLoss: true,
+      pauseOnHover: true,
+      draggable: true,
+      draggablePercent: 0.6,
+      showCloseButtonOnHover: false,
+      hideProgressBar: true,
+      closeButton: "button",
+      icon: true,
+      rtl: false,
+    });
     return router.push({ path: "/User/Search" });
   }
 };

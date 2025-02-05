@@ -14,10 +14,12 @@ export const useAuthStore = defineStore("auth", () => {
 
       return res;
     } catch (err) {
-      console.error(err);
+
       if (err.response?.status === 401) {
         User.value = null;
       }
+
+      throw err.response
     }
   };
 
@@ -38,12 +40,9 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
-  const logout = async () => {
+  const logout = () => {
     try {
-      await axios.get("/auth/logout", {
-        headers: { "Cache-Control": "no-cache" },
-        withCredentials: true,
-      });
+      document.cookie = "genghua=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
 
       User.value = null;
       return true;

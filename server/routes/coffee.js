@@ -217,7 +217,7 @@ router.post(
       let data = await coffeModel.addKeepPickup(
         id,
         date ?? new Date().getTime(),
-        req.session.adminId
+        req.user.adminId
       );
       res.status(200).send(data);
     } catch (err) {
