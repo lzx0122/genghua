@@ -5,7 +5,7 @@ var jwt = require('jsonwebtoken');
 
 async function verifyAdmin(req, res, next) {
   const token = req.cookies.genghua;
-  console.log(token + 1)
+  console.log(token + "1")
   if (!token) return res.status(401).send("沒有登入");
   jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, user) => {
     if (err) return res.sendStatus(403); // 禁止訪問
