@@ -4,7 +4,7 @@ var router = express.Router();
 var middleware = require("./middleware");
 var jwt = require("jsonwebtoken");
 
-router.get("/", middleware, function (req, res, next) {
+router.get("/", middleware.verifyAdmin, function (req, res, next) {
   if (!req.user.adminId) return res.status(401).send("session過期");
   res.status(200).send({ adminId: req.user.adminId, name: req.user.name });
 });
