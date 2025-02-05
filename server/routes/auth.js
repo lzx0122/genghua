@@ -37,9 +37,8 @@ router.post("/login", async function (req, res, next) {
       const token = jwt.sign(user, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
       // 設置 cookie
       res.cookie('genghua', token, {
-        httpOnly: true,
+
         secure: process.env.NODE_ENV === 'production', // 僅在生產環境中使用 HTTPS
-        sameSite: "None",
         maxAge: 3600000 // 1 小時
       });
 
