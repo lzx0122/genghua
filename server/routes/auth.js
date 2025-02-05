@@ -38,10 +38,10 @@ router.post("/login", async function (req, res, next) {
       // 設置 cookie
       res.cookie("genghua", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: "auto",
         maxAge: 3600000, // 1 小時
+        sameSite: "none", // 允許跨域
         path: "/", // 允許所有路徑存取
-        domain: ".genghua-coffee-server.vercel.app", // 允許所有子網域存取
       });
 
       return res.status(200).send(user);
