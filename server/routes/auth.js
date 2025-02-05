@@ -40,7 +40,7 @@ router.post("/login", async function (req, res, next) {
         httpOnly: true,
         secure: true,
         maxAge: 3600000, // 1 小時
-        sameSite: None, // 允許跨域
+        sameSite: "none", // 允許跨域
         path: "/", // 允許所有路徑存取
       });
 
