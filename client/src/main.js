@@ -10,6 +10,7 @@ import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 axios.defaults.baseURL = "https://genghua-coffee-server.vercel.app/api";
 //axios.defaults.baseURL = "http://localhost:3000";
+
 axios.defaults.withCredentials = true;
 createApp(App)
   .use(Toast)
