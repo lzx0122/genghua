@@ -7,4 +7,5 @@
       "destination": "https://genghua-coffee-server.vercel.app/:path*"
     }
   ]
+  
 }
