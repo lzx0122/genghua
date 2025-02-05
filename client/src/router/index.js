@@ -21,7 +21,7 @@ router.beforeEach(async (to, from, next) => {
   const { fetchUser } = store;
   try {
     if (to.fullPath === "/Admin/AddUser") {
-      let res = await fetchUser()
+      await fetchUser();
 
       Title.value = "新增顧客";
     }
@@ -35,16 +35,14 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.fullPath === "/Admin/Search") {
-      await fetchUser()
+      await fetchUser();
 
       Title.value = "管理查詢顧客";
     }
 
-    next()
+    next();
   } catch (e) {
-
-    if (e.status === 401) next({ path: '/User/Search' });
+    if (e.status === 401) next({ path: "/User/Search" });
   }
-
 });
 export default router;
