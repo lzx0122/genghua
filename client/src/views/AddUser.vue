@@ -61,7 +61,6 @@ const addUserHandler = async () => {
       rtl: false,
     });
   } catch (err) {
-    console.log(err);
     if (err.response?.status === 500) {
       toast.error(err.response.data, {
         position: "top-center",

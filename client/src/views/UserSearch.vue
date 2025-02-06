@@ -3,6 +3,8 @@ import { useToast } from "vue-toastification";
 import { storeToRefs } from "pinia";
 import { useDataStore } from "../stores/Data";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const toast = useToast();
 const DataStore = useDataStore();
 const { UserSearchData } = storeToRefs(DataStore);
@@ -49,6 +51,10 @@ const SearchUserHandle = async () => {
     isLoading.value = false;
   }
 };
+
+const gotoUserStore = (account) => {
+  router.push({ path: `/User/Store/${account}` });
+};
 </script>
 
 <template>
@@ -88,14 +94,18 @@ const SearchUserHandle = async () => {
     <div
       class="flex flex-col items-center min-h-[758px] w-full max-w-[335px] flex-col text-zinc-800"
     >
-      <div v-if="UserSearchData" class="flex w-full flex-col rounded-none">
+      <div
+        v-if="UserSearchData"
+        class="flex w-full flex-col rounded-none"
+        @click="gotoUserStore(UserSearchData.Account)"
+      >
         <div
           class="flex w-full flex-col items-start rounded-lg border-4 border-solid border-zinc-800 px-3 py-4"
         >
           <div class="flex gap-6 text-center whitespace-nowrap">
             <div class="my-auto text-2xl">{{ UserSearchData.Name }}</div>
             <div class="basis-auto text-3xl">
-              {{ UserSearchData.MonthDay }}
+              {{ UserSearchData.MonthDay.replace("-", "月") + "日" }}
             </div>
           </div>
           <div

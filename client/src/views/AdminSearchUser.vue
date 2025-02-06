@@ -59,7 +59,7 @@ const AdminSearchUserHandleByDate = async () => {
   isLoading.value = true;
 
   try {
-    await GetAdminSearchUserDataByDate(new Date("2004-01-22").getTime());
+    await GetAdminSearchUserDataByDate(new Date(date.value).getTime());
   } catch (e) {
     toast.error(e, {
       position: "top-center",
@@ -149,7 +149,9 @@ const AdminSearchUserHandleByDate = async () => {
         >
           <div class="flex gap-6 text-center whitespace-nowrap">
             <div class="my-auto text-2xl">{{ user.Name }}</div>
-            <div class="basis-auto text-3xl">{{ user.MonthDay }}</div>
+            <div class="basis-auto text-3xl">
+              {{ user.MonthDay.replace("-", "月") + "日" }}
+            </div>
           </div>
           <div
             class="mt-2 ml-3 flex gap-3 rounded-lg border-4 border-solid border-zinc-900 bg-white px-2.5 py-1.5 text-lg leading-none tracking-normal"

@@ -1,6 +1,6 @@
 var express = require("express");
 var coffeModel = require("../models/").coffee;
-var middleware = require("./middleware");
+var authMiddleware = require("../middlewares").auth;
 var router = express.Router();
 
 /* GET users listing. */
@@ -25,7 +25,7 @@ router.get("/user/:userId", async function (req, res, next) {
 
 router.get(
   "/admin/user",
-  middleware.verifyAdmin,
+  authMiddleware.verifyAdmin,
   async function (req, res, next) {
     try {
       let data = await coffeModel.getAllUsers();
@@ -38,7 +38,7 @@ router.get(
 
 router.post(
   "/admin/user",
-  middleware.verifyAdmin,
+  authMiddleware.verifyAdmin,
   async function (req, res, next) {
     try {
       let { account, name, date, email, desc } = req.body;
@@ -52,7 +52,7 @@ router.post(
 
 router.get(
   "/admin/user/account/:account",
-  middleware.verifyAdmin,
+  authMiddleware.verifyAdmin,
   async function (req, res, next) {
     try {
       let { account } = req.params;
@@ -68,11 +68,12 @@ router.get(
 
 router.get(
   "/admin/users/date/:date",
-  middleware.verifyAdmin,
+  authMiddleware.verifyAdmin,
   async function (req, res, next) {
     try {
       let { date } = req.params;
       let data = await coffeModel.getUsersByDate(date);
+      if (!data) return res.status(404).send("沒有查詢到此會員");
       for (const [index, d] of data.entries()) {
         data[index] = await coffeModel.getUserAndLogsByUserData(d);
       }
@@ -106,7 +107,7 @@ router.get("/item/:itemid", async function (req, res, next) {
 
 router.post(
   "/admin/item",
-  middleware.verifyAdmin,
+  authMiddleware.verifyAdmin,
   async function (req, res, next) {
     try {
       let { itemId, name } = req.body;
@@ -114,7 +115,7 @@ router.post(
       let data = await coffeModel.addItem(itemId, name);
       res.status(200).send(data);
     } catch (err) {
-      console.log(err);
+
       res.status(500).send(err.message);
     }
   }
@@ -122,7 +123,7 @@ router.post(
 
 router.put(
   "/admin/item/:id",
-  middleware.verifyAdmin,
+  authMiddleware.verifyAdmin,
   async function (req, res, next) {
     try {
       let { itemId, name } = req.body;
@@ -131,7 +132,7 @@ router.put(
       let data = await coffeModel.updateItem(id, itemId, name);
       res.status(200).send(data);
     } catch (err) {
-      console.log(err);
+
       res.status(500).send(err.message);
     }
   }
@@ -139,7 +140,7 @@ router.put(
 
 router.delete(
   "/admin/item/:id",
-  middleware.verifyAdmin,
+  authMiddleware.verifyAdmin,
   async function (req, res, next) {
     try {
       let { id } = req.params;
@@ -156,7 +157,7 @@ router.delete(
 
 router.post(
   "/admin/keep",
-  middleware.verifyAdmin,
+  authMiddleware.verifyAdmin,
   async function (req, res, next) {
     try {
       let { account, adminId, itemId, amount } = req.body;
@@ -169,7 +170,7 @@ router.post(
       );
       res.status(200).send(data);
     } catch (err) {
-      console.log(err);
+
       res.status(500).send(err.message);
     }
   }
@@ -177,7 +178,7 @@ router.post(
 
 router.delete(
   "/admin/keep/:keepId",
-  middleware.verifyAdmin,
+  authMiddleware.verifyAdmin,
   async function (req, res, next) {
     try {
       let { keepId } = req.params;
@@ -185,7 +186,7 @@ router.delete(
       let data = await coffeModel.deleteKeep(keepId);
       res.status(200).send(data);
     } catch (err) {
-      console.log(err);
+
       res.status(500).send(err.message);
     }
   }
@@ -193,7 +194,7 @@ router.delete(
 
 router.put(
   "/admin/keep/:id",
-  middleware.verifyAdmin,
+  authMiddleware.verifyAdmin,
   async function (req, res, next) {
     try {
       let { itemId, amount } = req.body;
@@ -202,7 +203,7 @@ router.put(
       let data = await coffeModel.updateKeep(id, itemId, parseInt(amount));
       res.status(200).send(data);
     } catch (err) {
-      console.log(err);
+
       res.status(500).send(err.message);
     }
   }
@@ -210,20 +211,21 @@ router.put(
 
 router.post(
   "/admin/keep/pickup/:id",
-  middleware.verifyAdmin,
+  authMiddleware.verifyAdmin,
   async function (req, res, next) {
     try {
-      let { date } = req.body;
+      let { date, count } = req.body;
       let { id } = req.params;
 
       let data = await coffeModel.addKeepPickup(
         id,
         date ?? new Date().getTime(),
-        req.user.adminId
+        req.user.adminId,
+        count
       );
       res.status(200).send(data);
     } catch (err) {
-      console.log(err);
+
       res.status(500).send(err.message);
     }
   }
@@ -231,7 +233,7 @@ router.post(
 
 router.delete(
   "/admin/keep/pickup/:id/:index",
-  middleware.verifyAdmin,
+  authMiddleware.verifyAdmin,
   async function (req, res, next) {
     try {
       let { id, index } = req.params;
@@ -239,7 +241,7 @@ router.delete(
       let data = await coffeModel.deleteKeepPickup(id, index);
       res.status(200).send(data);
     } catch (err) {
-      console.log(err);
+
       res.status(500).send(err.message);
     }
   }

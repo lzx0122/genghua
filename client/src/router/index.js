@@ -9,6 +9,7 @@ const routes = [
   { path: "/Admin/AddUser", component: () => import("../views/AddUser.vue") },
   { path: "/Auth", component: () => import("../views/Auth.vue") },
   { path: "/Admin/SearchUser", component: () => import("../views/AdminSearchUser.vue") },
+  { path: "/User/Store/:account", component: () => import("../views/UserStore.vue") }
 ];
 
 const router = createRouter({
@@ -18,7 +19,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const DataStore = useDataStore();
-  const { Title, ToggleMenu } = storeToRefs(DataStore);
+  const { Title, ToggleMenu, UserSearchData } = storeToRefs(DataStore);
   const store = useAuthStore();
   const { fetchUser } = store;
   try {
@@ -29,6 +30,7 @@ router.beforeEach(async (to, from, next) => {
 
     if (to.fullPath === "/User/Search") {
       Title.value = "會員查詢";
+      UserSearchData.value = null
     }
 
     if (to.fullPath === "/Admin/SearchUser") {
@@ -44,6 +46,13 @@ router.beforeEach(async (to, from, next) => {
     if (to.fullPath === "/Admin/AddUser") {
       await fetchUser();
       Title.value = "新增會員";
+    }
+
+    if (to.matched.some(record => record.path.startsWith('/User/Store/'))) {
+      if (!to.params.account) {
+        next({ path: "/User/Search" });
+      }
+      Title.value = "會員倉庫";
     }
     next();
   } catch (e) {

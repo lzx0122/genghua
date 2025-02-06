@@ -79,30 +79,50 @@ button:focus-visible {
   }
 }
 
-::-webkit-scrollbar {
-  width: 7px;
+/* 初始隱藏滾動條 */
+.scroll-container {
+  overflow: auto;
+  scrollbar-width: thin; /* Firefox 支援 */
+  scrollbar-color: transparent transparent; /* 初始隱藏 */
+  transition: scrollbar-color 0.3s ease;
 }
 
-::-webkit-scrollbar-button {
+/* WebKit (Chrome / Safari) 隱藏滾動條 */
+.scroll-container::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* 滾動條軌道 */
+.scroll-container::-webkit-scrollbar-track {
   background: transparent;
-
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
-::-webkit-scrollbar-track-piece {
+/* 滾動條手柄 */
+.scroll-container::-webkit-scrollbar-thumb {
   background: transparent;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  transition: background 0.3s ease;
 }
 
-::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-
-  background-color: rgba(0, 0, 0, 0.4);
-
-  border: 1px solid slategrey;
+/* 當滑鼠懸停時顯示滾動條 */
+.scroll-container:hover,
+.scroll-container:focus-within {
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
 }
 
-::-webkit-scrollbar-track {
-  box-shadow: transparent;
+/* 當滑鼠懸停時改變 WebKit 滾動條 */
+.scroll-container:hover::-webkit-scrollbar-thumb,
+.scroll-container:focus-within::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* 滑鼠懸停在滾動條上時 */
+.scroll-container:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.6);
 }
 
 a {

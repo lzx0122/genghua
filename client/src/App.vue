@@ -29,20 +29,6 @@ const loginHandler = async () => {
   }
 
   if (logout()) {
-    toast.success("登出成功 掰掰😩", {
-      position: "top-center",
-      timeout: 3000,
-      closeOnClick: true,
-      pauseOnFocusLoss: true,
-      pauseOnHover: true,
-      draggable: true,
-      draggablePercent: 0.6,
-      showCloseButtonOnHover: false,
-      hideProgressBar: true,
-      closeButton: "button",
-      icon: true,
-      rtl: false,
-    });
     return router.push({ path: "/User/Search" });
   }
 };
@@ -64,7 +50,7 @@ const loginHandler = async () => {
           alt=""
           @click="toggleMenuHandler"
         />
-        <div class="mt-4 text-2xl leading-none">{{ Title }}</div>
+        <div class="mt-4 text-2xl leading-none">{{ Title || "庚華門市" }}</div>
         <div class="flex flex-col text-sm tracking-wide leading-none">
           <img
             loading="lazy"

@@ -313,7 +313,7 @@ let model = {
         ItemId: itemId,
         Amount: parseInt(amount),
         Date: Timestamp.fromMillis(date),
-        PickUp: [],
+        Pickup: [],
       });
 
       return {
@@ -357,7 +357,7 @@ let model = {
     }
   },
   //keep pickup
-  async addKeepPickup(id, date, adminId) {
+  async addKeepPickup(id, date, adminId, count) {
     try {
       const docRef = doc(db, "Keep", id);
       const docSnap = await getDoc(docRef);
@@ -366,7 +366,7 @@ let model = {
       }
       let data = docSnap.data();
 
-      data.Pickup.push({ Date: Timestamp.fromMillis(date), AdminId: adminId });
+      data.Pickup.push({ Date: Timestamp.fromMillis(date), AdminId: adminId, Count: count });
       await updateDoc(docRef, {
         Pickup: data.Pickup, // 新後的 Pickup
       });

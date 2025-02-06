@@ -17,61 +17,11 @@ onMounted(() => {
   }
 });
 const loginHandler = async () => {
-  if (password.value.length > 8 || adminId.value.length != 10) {
-    toast.error("密碼不可大於8 或 員編錯誤", {
-      position: "top-center",
-      timeout: 3000,
-      closeOnClick: true,
-      pauseOnFocusLoss: true,
-      pauseOnHover: true,
-      draggable: true,
-      draggablePercent: 0.6,
-      showCloseButtonOnHover: false,
-      hideProgressBar: true,
-      closeButton: "button",
-      icon: true,
-      rtl: false,
-    });
-    return;
-  }
-
-  if (password.value.length < 8) {
-    password.value = password.value.padEnd(8, "0");
-  }
   try {
-    await login(adminId.value, password.value);
-    toast.success(`${User.value?.name} 您好！🫡`, {
-      position: "top-center",
-      timeout: 3000,
-      closeOnClick: true,
-      pauseOnFocusLoss: true,
-      pauseOnHover: true,
-      draggable: true,
-      draggablePercent: 0.6,
-      showCloseButtonOnHover: false,
-      hideProgressBar: true,
-      closeButton: "button",
-      icon: true,
-      rtl: false,
-    });
-    router.push({ path: "/User/Search" });
+    let res = await login(adminId.value, password.value);
+    if (res) router.push({ path: "/User/Search" });
   } catch (e) {
-    toast.error(e.message, {
-      position: "top-center",
-      timeout: 3000,
-      closeOnClick: true,
-      pauseOnFocusLoss: true,
-      pauseOnHover: true,
-      draggable: true,
-      draggablePercent: 0.6,
-      showCloseButtonOnHover: false,
-      hideProgressBar: true,
-      closeButton: "button",
-      icon: true,
-      rtl: false,
-    });
     adminId.value = "";
-    password.value = "";
   }
 };
 </script>
@@ -99,6 +49,7 @@ const loginHandler = async () => {
         v-model="password"
         class="flex shrink-0 gap-2.5 py-3 mt-2 h-12 bg-white rounded border-2 border-solid border-zinc-900"
         required
+        @keyup.enter="loginHandler"
       />
     </div>
   </div>
