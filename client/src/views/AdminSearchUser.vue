@@ -57,6 +57,7 @@ const AdminSearchUserHandleByDate = async () => {
         src="https://cdn.builder.io/api/v1/image/assets/1658e52805814928b66db3bf763c83c5/55f6ece7f2a1af2643a593c435207e1235a21e760605fe4f3b940a72fbfefe5b?apiKey=1658e52805814928b66db3bf763c83c5&"
         class="object-contain shrink-0 w-6 aspect-square"
         alt=""
+        @click="AdminSearchUserHandleByDate"
       />
       <input
         type="date"
@@ -75,6 +76,7 @@ const AdminSearchUserHandleByDate = async () => {
         src="https://cdn.builder.io/api/v1/image/assets/1658e52805814928b66db3bf763c83c5/3ed7c2a3c49f9448604e513463c9685534bd1c6ed702ffecbdeafc509ca62c99?apiKey=1658e52805814928b66db3bf763c83c5&"
         class="object-contain shrink-0 w-6 aspect-square"
         alt=""
+        @click="AdminSearchUserHandleByAccount"
       />
       <input
         type="text"
@@ -98,10 +100,10 @@ const AdminSearchUserHandleByDate = async () => {
   />
 
   <div
-    class="overflow-y-auto flex flex-col items-center mt-[10px] bg-white shadow-lg rounded-lg border p-2 cursor-grab active:cursor-grabbing"
+    class="overflow-y-auto flex flex-col h-full items-center mt-[10px] bg-white shadow-lg rounded-lg border p-2 cursor-grab active:cursor-grabbing"
   >
     <div
-      class="flex flex-col items-center min-h-[758px] w-full max-w-[335px] flex-col text-zinc-800"
+      class="flex flex-col items-center w-full max-w-[335px] flex-col text-zinc-800"
     >
       <div
         v-for="user in AdminSearchUsersData"

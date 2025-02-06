@@ -37,6 +37,7 @@ const gotoUserStore = (account) => {
       src="https://cdn.builder.io/api/v1/image/assets/TEMP/0a1f1b8721d60eb3a48f7d7fc2b4d84c10ae7aff0597407bed1a55ebc8e9c32c?placeholderIfAbsent=true&apiKey=1658e52805814928b66db3bf763c83c5"
       class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square"
       alt=""
+      @click="SearchUserHandle"
     />
     <input
       type="text"
@@ -48,7 +49,7 @@ const gotoUserStore = (account) => {
   </label>
 
   <div
-    class="overflow-y-auto flex flex-col items-center mt-[10px] bg-white shadow-lg rounded-lg border p-2 cursor-grab active:cursor-grabbing"
+    class="overflow-y-auto flex flex-col h-full items-center mt-[10px] bg-white shadow-lg rounded-lg border p-2 cursor-grab active:cursor-grabbing"
   >
     <Loading
       :active.sync="isLoading"
@@ -61,7 +62,7 @@ const gotoUserStore = (account) => {
       :loader="'Bars'"
     />
     <div
-      class="flex flex-col items-center min-h-[758px] w-full max-w-[335px] flex-col text-zinc-800"
+      class="flex flex-col items-center w-full max-w-[335px] flex-col text-zinc-800"
     >
       <div
         v-if="UserSearchData"

@@ -1,30 +1,44 @@
 <script setup>
 import { useDataStore } from "../stores/Data";
-import { useToast } from "vue-toastification";
 import { onMounted, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
-import axios from "axios";
+import dayjs from "dayjs";
 
 const DataStore = useDataStore();
 const { UserSearchData } = storeToRefs(DataStore);
 const { GetUserSearchData } = DataStore;
-const toast = useToast();
 const router = useRoute();
 const isLoading = ref(false);
 const userlogs = ref([]);
 
 const logsHandler = () => {
-  for (const keep of UserSearchData.value.Keeps) {
-    let picktemp = keep.Pickup.map(() => {
+  for (const [index, keep] of UserSearchData.value.Keeps.entries()) {
+    userlogs.value.push({
+      index: index,
+      title: `${keep.Item.Name} +${keep.Amount}`,
+      datetime: dayjs(keep.DateTime.seconds * 1000).format(
+        "YYYY MM月DD日 HH:mm"
+      ),
+      timestamp: keep.DateTime.seconds,
+      desc: "寄放",
+    });
+
+    let picktemp = keep.Pickup.map((e) => {
+      UserSearchData.value.Keeps[index].Amount -= e.Amount;
       return {
-        title: `${keep.Item.Name}` + "-1",
-        datetime: "2025 02月06日 21:12",
+        index: index,
+        title: `${keep.Item.Name} -${e.Amount}`,
+        datetime: dayjs(e.DateTime.seconds * 1000).format(
+          "YYYY MM月DD日 HH:mm"
+        ),
+        timestamp: e.DateTime.seconds,
         desc: "領取",
       };
     });
     userlogs.value.push(...picktemp);
   }
+  userlogs.value.sort((a, b) => b.timestamp - a.timestamp);
 };
 onMounted(async () => {
   await GetUserSearchData(router.params.account);
@@ -53,11 +67,11 @@ watch(
   />
   <div
     v-if="UserSearchData"
-    class="flex overflow-hidden flex-col pb-16 mx-auto w-full bg-white mt-[90px]"
+    class="flex overflow-hidden flex-col pb-10 mx-auto w-full bg-white mt-[90px]"
     role="main"
     aria-label="Member Warehouse Section"
   >
-    <div class="flex flex-col pl-4 mt-3.5 w-full">
+    <div class="flex flex-col px-4 mt-3.5 w-full">
       <div
         class="flex flex-col items-start self-center px-4 py-4 w-full rounded-lg border-4 border-solid border-zinc-800 max-w-[335px] text-zinc-800"
       >
@@ -90,7 +104,7 @@ watch(
       <div class="overflow-x-auto w-full">
         <div class="flex gap-4 items-start mt-5 whitespace-nowrap">
           <div
-            v-for="keep in UserSearchData.Keeps"
+            v-for="(keep, index) in UserSearchData.Keeps"
             :key="keep.id"
             class="flex flex-col w-[150px] shrink-0"
             tabindex="0"
@@ -110,11 +124,21 @@ watch(
             <div
               class="flex flex-col px-3 py-4 w-full bg-white rounded-none border-2 border-solid border-zinc-900 text-zinc-900"
             >
+              <div class="text-sm tracking-wide">
+                {{ index + 1 }}
+              </div>
               <div class="text-lg tracking-normal leading-none">
                 {{ keep.Item.Name }}
               </div>
               <div class="mt-1 text-xs tracking-wide">
-                剩餘數量: {{ keep.Amount - keep.Pickup.length }}
+                剩餘數量: {{ keep.Amount }}
+              </div>
+              <div class="text-xs tracking-wide">
+                {{
+                  dayjs(keep.DateTime.seconds * 1000).format(
+                    "YYYY MM月DD日 HH:mm"
+                  )
+                }}
               </div>
             </div>
           </div>
@@ -122,7 +146,7 @@ watch(
       </div>
     </div>
     <div
-      class="flex flex-col overflow-y-auto max-h-[400px] items-center p-6 mt-11 w-full text-base tracking-wide rounded-md"
+      class="flex flex-col overflow-y-auto max-h-[400px] items-center p-6 mt-5 w-full text-base tracking-wide rounded-md"
       role="list"
       aria-label="Transaction History"
     >
@@ -143,7 +167,9 @@ watch(
             <div class="mt-1 text-stone-500">{{ log.datetime }}</div>
           </div>
         </div>
-        <div class="self-start text-zinc-900">{{ log.desc }}</div>
+        <div class="self-start text-zinc-900">
+          編號{{ log.index + 1 }} {{ log.desc }}
+        </div>
       </div>
     </div>
   </div>

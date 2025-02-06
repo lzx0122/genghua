@@ -214,14 +214,14 @@ router.post(
   authMiddleware.verifyAdmin,
   async function (req, res, next) {
     try {
-      let { date, count } = req.body;
+      let { date, amount } = req.body;
       let { id } = req.params;
 
       let data = await coffeModel.addKeepPickup(
         id,
         date ?? new Date().getTime(),
         req.user.adminId,
-        count
+        amount
       );
       res.status(200).send(data);
     } catch (err) {

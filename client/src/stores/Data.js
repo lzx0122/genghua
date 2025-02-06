@@ -178,7 +178,7 @@ export const useDataStore = defineStore("data", () => {
         icon: true,
         rtl: false,
       });
-    } catch (e) {
+    } catch (err) {
       if (err.response?.status === 500) {
         toast.error(err.response.data, {
           position: "top-center",
