@@ -38,7 +38,7 @@ const loginHandler = async () => {
   <div class="w-screen h-screen flex flex-col mx-auto w-full bg-white">
     <div
       id="nav"
-      class="fixed top-0 left-0 w-full flex flex-col z-10 gap-5 justify-between items-start pt-6 pr-2 pb-3 pl-6 w-full text-center whitespace-nowrap bg-white shadow-sm text-zinc-900 transition-all duration-300 ease-out"
+      class="fixed top-0 left-0 w-full flex flex-col z-10 gap-5 justify-between items-start pr-2 pb-3 pl-6 w-full text-center whitespace-nowrap bg-white shadow-sm text-zinc-900 transition-all duration-300 ease-out"
     >
       <div
         class="flex gap-5 justify-between items-start pt-6 pr-2 pl-6 w-full text-center"

@@ -1,85 +1,16 @@
 <script setup>
-import { useAuthStore } from "../stores/Auth";
-import { useToast } from "vue-toastification";
-import { onMounted, ref } from "vue";
-import { storeToRefs } from "pinia";
-import { useRouter } from "vue-router";
-import axios from "axios";
-const toast = useToast();
-const router = useRouter();
-const store = useAuthStore();
-const { fetchUser } = store;
-const { User } = storeToRefs(store);
+import { useDataStore } from "../stores/Data";
+import { ref } from "vue";
+const dataStore = useDataStore();
+const { AddUser } = dataStore;
 const isLoading = ref(false);
-
 const userData = ref({ account: "", name: "", date: "", email: "", desc: "" });
 
 const addUserHandler = async () => {
-  if (
-    userData.value.name.trim().length <= 0 ||
-    !/^09[0-9]{8}$/.test(userData.value.account) ||
-    userData.value.date.length == 0
-  ) {
-    toast.error("請檢查 名稱、電話、生日 是否正確", {
-      position: "top-center",
-      timeout: 3000,
-      closeOnClick: true,
-      pauseOnFocusLoss: true,
-      pauseOnHover: true,
-      draggable: true,
-      draggablePercent: 0.6,
-      showCloseButtonOnHover: false,
-      hideProgressBar: true,
-      closeButton: "button",
-      icon: true,
-      rtl: false,
-    });
-    return;
-  }
-
-  try {
-    userData.value.date = new Date(userData.value.date).getTime();
-    isLoading.value = true;
-    const res = await axios.post(
-      "/coffee/admin/user",
-      { ...userData.value },
-      { withCredentials: true }
-    );
-
-    toast.success("新增成功", {
-      position: "top-center",
-      timeout: 3000,
-      closeOnClick: true,
-      pauseOnFocusLoss: true,
-      pauseOnHover: true,
-      draggable: true,
-      draggablePercent: 0.6,
-      showCloseButtonOnHover: false,
-      hideProgressBar: true,
-      closeButton: "button",
-      icon: true,
-      rtl: false,
-    });
-  } catch (err) {
-    if (err.response?.status === 500) {
-      toast.error(err.response.data, {
-        position: "top-center",
-        timeout: 3000,
-        closeOnClick: true,
-        pauseOnFocusLoss: true,
-        pauseOnHover: true,
-        draggable: true,
-        draggablePercent: 0.6,
-        showCloseButtonOnHover: false,
-        hideProgressBar: true,
-        closeButton: "button",
-        icon: true,
-        rtl: false,
-      });
-    }
-  } finally {
-    isLoading.value = false;
-  }
+  userData.value.date = new Date(userData.value.date).getTime();
+  isLoading.value = true;
+  await AddUser(userData.value);
+  isLoading.value = false;
 };
 </script>
 
@@ -95,9 +26,9 @@ const addUserHandler = async () => {
     :loader="'Bars'"
   />
   <div
-    class="overflow-y-auto mb-[120px] mt-[110px] bg-white shadow-lg rounded-lg border p-2"
+    class="overflow-y-auto mb-[120px] mt-[90px] bg-white shadow-lg rounded-lg border p-2"
   >
-    <div class="flex flex-col items-center px-6 mt-7 w-full">
+    <div class="flex flex-col items-center px-6 w-full">
       <div class="self-start text-2xl w-auto text-zinc-900">輸入會員資料</div>
       <form class="flex flex-col mt-3.5 w-auto min-h-[622px]">
         <div

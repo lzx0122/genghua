@@ -53,7 +53,7 @@ watch(
   />
   <div
     v-if="UserSearchData"
-    class="flex overflow-hidden flex-col pb-16 mx-auto w-full bg-white max-w-[335px] mt-[110px]"
+    class="flex overflow-hidden flex-col pb-16 mx-auto w-full bg-white mt-[90px]"
     role="main"
     aria-label="Member Warehouse Section"
   >

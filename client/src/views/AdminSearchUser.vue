@@ -14,23 +14,6 @@ const isLoading = ref(false);
 onMounted(() => {});
 
 const AdminSearchUserHandleByAccount = async () => {
-  if (account.value.length < 10 || !/^09[0-9]{8}$/.test(account.value)) {
-    toast.error("電話號碼格式錯誤", {
-      position: "top-center",
-      timeout: 3000,
-      closeOnClick: true,
-      pauseOnFocusLoss: true,
-      pauseOnHover: true,
-      draggable: true,
-      draggablePercent: 0.6,
-      showCloseButtonOnHover: false,
-      hideProgressBar: true,
-      closeButton: "button",
-      icon: true,
-      rtl: false,
-    });
-    return;
-  }
   isLoading.value = true;
 
   try {
@@ -57,33 +40,14 @@ const AdminSearchUserHandleByAccount = async () => {
 
 const AdminSearchUserHandleByDate = async () => {
   isLoading.value = true;
-
-  try {
-    await GetAdminSearchUserDataByDate(new Date(date.value).getTime());
-  } catch (e) {
-    toast.error(e, {
-      position: "top-center",
-      timeout: 3000,
-      closeOnClick: true,
-      pauseOnFocusLoss: true,
-      pauseOnHover: true,
-      draggable: true,
-      draggablePercent: 0.6,
-      showCloseButtonOnHover: false,
-      hideProgressBar: true,
-      closeButton: "button",
-      icon: true,
-      rtl: false,
-    });
-  } finally {
-    isLoading.value = false;
-  }
+  await GetAdminSearchUserDataByDate(new Date(date.value).getTime());
+  isLoading.value = false;
 };
 </script>
 
 <template>
   <div
-    class="flex mx-auto px-[10px] mt-[120px] gap-7 mt-2 w-full text-lg tracking-normal leading-none whitespace-nowrap max-w-[500px] text-zinc-400"
+    class="flex mx-auto px-[10px] mt-[90px] gap-7 mt-2 w-full text-lg tracking-normal leading-none whitespace-nowrap max-w-[500px] text-zinc-400"
   >
     <label
       class="flex overflow-hidden flex-1 gap-3 items-center p-3 text-center bg-white rounded-lg border-solid border-[3px] border-zinc-900 cursor-pointer"

@@ -98,7 +98,7 @@ export const useAuthStore = defineStore("auth", () => {
   const logout = () => {
     try {
       User.value = null;
-      localStorage.removeItem('token');
+      localStorage.removeItem('genghua-token');
       toast.success("登出成功 掰掰😩", {
         position: "top-center",
         timeout: 3000,
