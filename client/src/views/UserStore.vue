@@ -146,7 +146,7 @@ watch(
       </div>
     </div>
     <div
-      class="flex flex-col overflow-y-auto max-h-[400px] items-center p-6 mt-5 w-full text-base tracking-wide rounded-md"
+      class="flex flex-col overflow-y-auto max-h-[400px] items-center px-6 mt-5 w-full text-base tracking-wide rounded-md"
       role="list"
       aria-label="Transaction History"
     >
