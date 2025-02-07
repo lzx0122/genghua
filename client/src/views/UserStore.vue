@@ -67,7 +67,7 @@ watch(
   />
   <div
     v-if="UserSearchData"
-    class="flex overflow-hidden flex-col pb-10 mx-auto w-full bg-white mt-[90px]"
+    class="flex overflow-y-auto flex-col pb-10 mx-auto w-full bg-white mt-[90px]"
     role="main"
     aria-label="Member Warehouse Section"
   >
@@ -146,7 +146,7 @@ watch(
       </div>
     </div>
     <div
-      class="flex flex-col overflow-y-auto max-h-[400px] items-center px-6 mt-5 w-full text-base tracking-wide rounded-md"
+      class="flex flex-col overflow-y-auto min-h-[500px] max-h-[500px] items-center px-6 mt-5 w-full text-base tracking-wide rounded-md"
       role="list"
       aria-label="Transaction History"
     >
