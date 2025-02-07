@@ -25,8 +25,9 @@ const addUserHandler = async () => {
     :width="128"
     :loader="'Bars'"
   />
+
   <div
-    class="overflow-y-auto mb-[120px] mt-[90px] bg-white shadow-lg rounded-lg border p-2"
+    class="overflow-y-auto mb-[120px] bg-white shadow-lg rounded-lg border p-2"
   >
     <div class="flex flex-col items-center px-6 w-full">
       <div class="self-start text-2xl w-auto text-zinc-900">輸入會員資料</div>

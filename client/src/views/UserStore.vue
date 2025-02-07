@@ -65,9 +65,10 @@ watch(
     :width="128"
     :loader="'Bars'"
   />
+  <div class="min-h-[76px]"></div>
   <div
     v-if="UserSearchData"
-    class="flex overflow-y-auto flex-col pb-10 mx-auto w-full bg-white mt-[90px]"
+    class="flex overflow-y-auto flex-col pb-10 mx-auto w-full bg-white"
     role="main"
     aria-label="Member Warehouse Section"
   >

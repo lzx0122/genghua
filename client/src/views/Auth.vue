@@ -11,6 +11,7 @@ const { User } = storeToRefs(store);
 const { fetchUser, login } = store;
 const adminId = ref("");
 const password = ref("");
+const isLoading = ref(false);
 onMounted(() => {
   if (User.value != null) {
     router.push({ path: "/User/Search" });
@@ -18,7 +19,10 @@ onMounted(() => {
 });
 const loginHandler = async () => {
   try {
+    if (isLoading.value) return;
+    isLoading.value = true;
     let res = await login(adminId.value, password.value);
+    isLoading.value = false;
     if (res) router.push({ path: "/User/Search" });
   } catch (e) {
     adminId.value = "";
@@ -27,6 +31,16 @@ const loginHandler = async () => {
 </script>
 
 <template>
+  <Loading
+    :active.sync="isLoading"
+    :is-full-page="true"
+    :can-cancel="true"
+    :color="'oklch(0.21 0.006 285.885)'"
+    :background-color="'rgb(255, 255, 255)'"
+    :height="128"
+    :width="128"
+    :loader="'Bars'"
+  />
   <div class="overflow-y-auto flex flex-col items-center mb-[120px] mt-[90px]">
     <div
       class="flex flex-col max-w-[335px] px-7 mt-7 w-full text-lg leading-loose text-zinc-900"
