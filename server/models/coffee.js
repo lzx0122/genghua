@@ -115,6 +115,11 @@ let model = {
       let keeps = [];
       for (const doc of queryKeep.docs) {
         // 取得 keep
+
+        if ("Item" in doc.data()) {
+          keeps.push({ id: doc.id, ...doc.data() });
+          continue
+        }
         let item = await this.getItemById(doc.data().ItemId);
         delete item.Desc;
         keeps.push({ id: doc.id, ...doc.data(), Item: item });
@@ -298,32 +303,35 @@ let model = {
     }
   },
   //keep
-  async addKeep(account, adminId, itemId, amount, date) {
+  async addKeep(account, adminId, itemId, itemName, amount, date) {
     try {
+      console.log(itemId)
       if (!(await this.getUserByAccount(account))) {
         throw new Error("此用戶不存在");
       }
-      if (!(await this.getItemById(itemId))) {
-        throw new Error("此商品ID不存在");
-      }
-
-      const docRef = await addDoc(collection(db, "Keep"), {
+      // if (!(await this.getItemById(itemId))) {
+      //   throw new Error("此商品ID不存在");
+      // }
+      let data = {
         Account: account,
         AdminId: adminId,
-        ItemId: itemId,
         Amount: parseInt(amount),
-        Date: Timestamp.fromMillis(date),
+        DateTime: Timestamp.fromMillis(date),
         Pickup: [],
-      });
+      }
+
+      if (itemName) {
+        data.Item = { Name: itemName }
+      } else {
+
+        data.ItemId = itemId
+      }
+
+      const docRef = await addDoc(collection(db, "Keep"), data);
 
       return {
         id: docRef.id,
-        Account: account,
-        AdminId: adminId,
-        ItemId: itemId,
-        Amount: parseInt(amount),
-        DateTime: Timestamp.fromMillis(date),
-        PickUp: [],
+        ...data
       };
     } catch (e) {
       throw new Error("新增寄放商品資料失敗：" + e.message);

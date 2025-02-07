@@ -160,11 +160,12 @@ router.post(
   authMiddleware.verifyAdmin,
   async function (req, res, next) {
     try {
-      let { account, adminId, itemId, amount } = req.body;
+      let { account, adminId, itemId, amount, itemName } = req.body;
       let data = await coffeModel.addKeep(
         account,
         adminId,
         itemId,
+        itemName,
         amount,
         new Date().getTime()
       );
