@@ -3,7 +3,7 @@ import { ref, watch, computed, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useDataStore } from "../stores/Data";
 import { useToast } from "vue-toastification";
-const toast = useToast();
+
 const DataStore = useDataStore();
 const { GetItemData, AddKeep } = DataStore;
 const { AdminSearchUsersData, ItemData } = storeToRefs(DataStore);
@@ -12,10 +12,10 @@ const isUseItemDatabase = ref(false);
 const searchText = ref("");
 const selectedId = ref(null);
 const showDropdown = ref(false);
+const isLoading = ref(false);
 
 onMounted(async () => {
   await GetItemData();
-  console.log(ItemData.value);
 });
 
 const amount = ref(1);
@@ -34,15 +34,13 @@ const filteredOptions = computed(() => {
 
 // **選擇某個選項時**
 const selectOption = (option) => {
-  console.log(option);
   searchText.value = option.Name; // 設定輸入框的值
   selectedId.value = option.ItemId; // 記住選中的 ID
   showDropdown.value = false; // 關閉下拉選單
 };
 
 const submit = async () => {
-  console.log(selectedId.value);
-  if (isUseItemDatabase && !selectedId.value) {
+  if (isUseItemDatabase.value && !selectedId.value) {
     toast.error("選擇清單模式，請從選單中選取一個品項", {
       position: "top-center",
       timeout: 3000,
@@ -59,16 +57,29 @@ const submit = async () => {
     });
     return;
   }
+  isLoading.value = true;
   await AddKeep({
     account: AdminSearchUsersData.value[0].Account,
     amount: amount.value,
     itemId: isUseItemDatabase.value ? selectedId.value : null,
-    itemName: isUseItemDatabase.value ? searchText.value : null,
+    itemName: isUseItemDatabase.value ? null : searchText.value,
   });
+  isLoading.value = false;
+  window.location.reload();
 };
 </script>
 
 <template>
+  <Loading
+    :active.sync="isLoading"
+    :is-full-page="true"
+    :can-cancel="true"
+    :color="'oklch(0.21 0.006 285.885)'"
+    :background-color="'rgb(255, 255, 255)'"
+    :height="128"
+    :width="128"
+    :loader="'Bars'"
+  />
   <div
     v-if="show"
     class="modal-mask text-lg tracking-normal leading-none rounded-none"

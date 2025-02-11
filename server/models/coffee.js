@@ -93,6 +93,7 @@ let model = {
     }
   },
   async getUserByAccount(accountNumber) {
+
     try {
       // 建立查詢條件
       const q = query(

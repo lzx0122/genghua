@@ -1,9 +1,15 @@
 <script setup>
 import { useDataStore } from "../stores/Data";
+import { computed } from "vue";
 const DataStore = useDataStore();
 import { storeToRefs } from "pinia";
 import dayjs from "dayjs";
 const { UserSearchData } = storeToRefs(DataStore);
+const sortKeeps = computed(() =>
+  [...UserSearchData.value.Keeps].sort(
+    (a, b) => b.DateTime.seconds - a.DateTime.seconds
+  )
+);
 </script>
 
 <template>
@@ -40,7 +46,7 @@ const { UserSearchData } = storeToRefs(DataStore);
     <div class="overflow-x-auto w-full">
       <div class="flex gap-4 items-start mt-5 whitespace-nowrap">
         <div
-          v-for="(keep, index) in UserSearchData.Keeps"
+          v-for="(keep, index) in sortKeeps"
           :key="keep.id"
           class="flex flex-col w-[150px] shrink-0"
           tabindex="0"

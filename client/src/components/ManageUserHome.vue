@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed } from "vue";
 import { useDataStore } from "../stores/Data";
 import AddKeepModal from "./AddKeepModal.vue";
 import { storeToRefs } from "pinia";
@@ -8,6 +8,11 @@ const DataStore = useDataStore();
 const { GetItemData } = DataStore;
 const { AdminSearchUsersData, ItemData } = storeToRefs(DataStore);
 const showAddKeepModal = ref(false);
+const sortKeeps = computed(() =>
+  [...AdminSearchUsersData.value[0].Keeps].sort(
+    (a, b) => b.DateTime.seconds - a.DateTime.seconds
+  )
+);
 </script>
 
 <template>
@@ -68,7 +73,7 @@ const showAddKeepModal = ref(false);
     <div class="overflow-x-auto w-full">
       <div class="flex gap-4 items-start mt-5 whitespace-nowrap">
         <div
-          v-for="(keep, index) in AdminSearchUsersData[0].Keeps"
+          v-for="(keep, index) in sortKeeps"
           :key="keep.id"
           class="flex flex-col w-[150px] shrink-0"
           tabindex="0"

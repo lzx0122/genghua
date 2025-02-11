@@ -17,7 +17,7 @@ router.post("/login", async function (req, res, next) {
     if (data && data.Password == password) {
       const user = { adminId: data.AdminId, name: data.Name };
       const token = jwt.sign(user, process.env.JWT_SECRET_KEY, {
-        expiresIn: "1h",
+        expiresIn: "1d",
       });
 
 
