@@ -79,15 +79,14 @@ button:focus-visible {
   }
 }
 
-/* 初始隱藏滾動條 */
+/* 讓滾動條一開始就顯示 */
 .scroll-container {
   overflow: auto;
-  scrollbar-width: thin; /* Firefox 支援 */
-  scrollbar-color: transparent transparent; /* 初始隱藏 */
-  transition: scrollbar-color 0.3s ease;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: white black; /* 手柄白色，軌道黑色 */
 }
 
-/* WebKit (Chrome / Safari) 隱藏滾動條 */
+/* WebKit (Chrome / Safari) 滾動條設定 */
 .scroll-container::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -101,29 +100,17 @@ button:focus-visible {
 
 /* 滾動條手柄 */
 .scroll-container::-webkit-scrollbar-thumb {
-  background: transparent;
+  background: white;
   border-radius: 6px;
-  border: 1px solid transparent;
-  transition: background 0.3s ease;
-}
-
-/* 當滑鼠懸停時顯示滾動條 */
-.scroll-container:hover,
-.scroll-container:focus-within {
-  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
-}
-
-/* 當滑鼠懸停時改變 WebKit 滾動條 */
-.scroll-container:hover::-webkit-scrollbar-thumb,
-.scroll-container:focus-within::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid black;
+  transition: background 0.3s ease, border 0.3s ease;
 }
 
 /* 滑鼠懸停在滾動條上時 */
-.scroll-container:hover::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.6);
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #f0f0f0; /* 稍微變灰，提升可視性 */
 }
+
 
 a {
   text-decoration: none; /* 刪除下劃線 */

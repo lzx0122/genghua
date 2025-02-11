@@ -305,7 +305,7 @@ let model = {
   //keep
   async addKeep(account, adminId, itemId, itemName, amount, date) {
     try {
-      console.log(itemId)
+
       if (!(await this.getUserByAccount(account))) {
         throw new Error("此用戶不存在");
       }

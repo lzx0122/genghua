@@ -8,6 +8,8 @@ export const useDataStore = defineStore("data", () => {
   const UserSearchData = ref(null);
   const AdminSearchUsersData = ref(null)
   const ToggleMenu = ref(false);
+  const ItemData = ref(null)
+
 
   const GetUserSearchData = async (account) => {
     try {
@@ -199,6 +201,92 @@ export const useDataStore = defineStore("data", () => {
 
   }
 
+  const AddKeep = async (keepData) => {
+    try {
+
+      await axios.post(
+        "/coffee/admin/keep",
+        { ...keepData },
+        {
+          withCredentials: true,
+          headers: {
+            "Cache-Control": "no-cache",
+            Authorization: `Bearer ${localStorage.getItem("genghua-token") || ""
+              }`,
+          },
+        }
+      );
+
+      toast.success("新增成功", {
+        position: "top-center",
+        timeout: 3000,
+        closeOnClick: true,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        draggable: true,
+        draggablePercent: 0.6,
+        showCloseButtonOnHover: false,
+        hideProgressBar: true,
+        closeButton: "button",
+        icon: true,
+        rtl: false,
+      });
+    } catch (err) {
+      if (err.response?.status === 500) {
+        toast.error(err.response.data, {
+          position: "top-center",
+          timeout: 3000,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: true,
+          closeButton: "button",
+          icon: true,
+          rtl: false,
+        });
+      }
+    }
+  }
+
+  const GetItemData = async () => {
+
+    try {
+
+      let res = await axios.get("/coffee/item", {
+        headers: { "Cache-Control": "no-cache" },
+        withCredentials: true,
+      });
+
+      ItemData.value = res.data
+
+
+    } catch (err) {
+      if (err.response?.status === 500) {
+        toast.error(err.response.data, {
+          position: "top-center",
+          timeout: 3000,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: true,
+          closeButton: "button",
+          icon: true,
+          rtl: false,
+        });
+      }
+
+    }
+
+  }
+
+
+
   return {
     Title,
     UserSearchData,
@@ -207,6 +295,6 @@ export const useDataStore = defineStore("data", () => {
     AdminSearchUsersData,
     GetAdminSearchUserDataByAccount,
     GetAdminSearchUserDataByDate,
-    AddUser
+    AddUser, GetItemData, ItemData, AddKeep
   };
 });

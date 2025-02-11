@@ -9,7 +9,8 @@ const routes = [
   { path: "/Admin/AddUser", component: () => import("../views/AddUser.vue") },
   { path: "/Auth", component: () => import("../views/Auth.vue") },
   { path: "/Admin/SearchUser", component: () => import("../views/AdminSearchUser.vue") },
-  { path: "/User/Store/:account", component: () => import("../views/UserStore.vue") }
+  { path: "/User/Store/:account", component: () => import("../views/UserStore.vue") },
+  { path: "/Admin/ManageUser/:account", component: () => import("../views/ManageUser.vue") }
 ];
 
 const router = createRouter({
@@ -53,6 +54,16 @@ router.beforeEach(async (to, from, next) => {
         next({ path: "/User/Search" });
       }
       Title.value = "會員倉庫";
+    }
+
+    if (to.matched.some(record => record.path.startsWith('/Admin/ManageUser/'))) {
+
+      await fetchUser();
+
+      if (!to.params.account) {
+        next({ path: "/User/Search" });
+      }
+      Title.value = "管理會員";
     }
     next();
   } catch (e) {

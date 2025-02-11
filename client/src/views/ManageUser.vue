@@ -3,13 +3,13 @@ import { useDataStore } from "../stores/Data";
 import { onMounted, ref, watch, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
-import UserStoreHome from "../components/UserStoreHome.vue";
-import UserStoreLogs from "../components/UserStoreLogs.vue";
+import ManageUserHome from "../components/ManageUserHome.vue";
+import ManageUserLogs from "../components/ManageUserLogs.vue";
 import dayjs from "dayjs";
 
 const DataStore = useDataStore();
-const { UserSearchData } = storeToRefs(DataStore);
-const { GetUserSearchData } = DataStore;
+const { AdminSearchUsersData } = storeToRefs(DataStore);
+const { GetAdminSearchUserDataByAccount } = DataStore;
 const router = useRoute();
 const isLoading = ref(false);
 const userlogs = ref([]);
@@ -17,17 +17,17 @@ const tabs = [
   {
     id: 0,
     title: "庫存",
-    component: UserStoreHome,
+    component: ManageUserHome,
   },
   {
     id: 1,
     title: "紀錄",
-    component: UserStoreLogs,
+    component: ManageUserLogs,
   },
 ];
 const tabindex = ref(0);
 const logsHandler = () => {
-  for (const [index, keep] of UserSearchData.value.Keeps.entries()) {
+  for (const [index, keep] of AdminSearchUsersData.value[0].Keeps.entries()) {
     userlogs.value.push({
       index: index,
       title: `${keep.Item.Name} +${keep.Amount}`,
@@ -39,7 +39,7 @@ const logsHandler = () => {
     });
 
     let picktemp = keep.Pickup.map((e) => {
-      UserSearchData.value.Keeps[index].Amount -= e.Amount;
+      AdminSearchUsersData.value[0].Keeps[index].Amount -= e.Amount;
       return {
         index: index,
         title: `${keep.Item.Name} -${e.Amount}`,
@@ -67,14 +67,15 @@ const getProps = computed(() => {
   return {};
 });
 onMounted(async () => {
-  await GetUserSearchData(router.params.account);
+  await GetAdminSearchUserDataByAccount(router.params.account);
+
   logsHandler();
 });
 
 watch(
   () => router.params.account,
   async (newAccount) => {
-    await GetUserSearchData(newAccount);
+    await GetAdminSearchUserDataByAccount(newAccount);
     logsHandler();
   }
 );
@@ -113,7 +114,7 @@ watch(
   </div>
 
   <div
-    v-if="UserSearchData"
+    v-if="Array.isArray(AdminSearchUsersData) ? AdminSearchUsersData[0] : null"
     class="flex overflow-y-auto flex-col pb-10 mx-auto w-full bg-white"
     role="main"
     aria-label="Member Warehouse Section"

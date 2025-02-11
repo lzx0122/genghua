@@ -11,6 +11,8 @@ const toast = useToast();
 const date = ref("");
 const account = ref("");
 const isLoading = ref(false);
+import { useRouter } from "vue-router";
+const router = useRouter();
 onMounted(() => {});
 
 const AdminSearchUserHandleByAccount = async () => {
@@ -42,6 +44,10 @@ const AdminSearchUserHandleByDate = async () => {
   isLoading.value = true;
   await GetAdminSearchUserDataByDate(new Date(date.value).getTime());
   isLoading.value = false;
+};
+
+const gotoUser = (account) => {
+  router.push({ path: `/Admin/ManageUser/${account}` });
 };
 </script>
 
@@ -109,6 +115,7 @@ const AdminSearchUserHandleByDate = async () => {
         v-for="user in AdminSearchUsersData"
         :key="user.Account"
         class="flex w-full mt-[10px] flex-col rounded-none"
+        @click="gotoUser(user.Account)"
       >
         <div
           class="flex w-full flex-col items-start rounded-lg border-4 border-solid border-zinc-800 px-3 py-4"

@@ -25,7 +25,7 @@ const addUserHandler = async () => {
     :width="128"
     :loader="'Bars'"
   />
-
+  <div class="min-h-[76px]"></div>
   <div
     class="overflow-y-auto mb-[120px] bg-white shadow-lg rounded-lg border p-2"
   >
