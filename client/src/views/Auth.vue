@@ -42,7 +42,7 @@ const loginHandler = async () => {
     :loader="'Bars'"
   />
   <div class="min-h-[76px]"></div>
-  <div class="overflow-y-auto flex flex-col items-center mb-[120px] mt-[90px]">
+  <div class="overflow-y-auto flex flex-col items-center mb-[120px]">
     <div
       class="flex flex-col max-w-[335px] px-7 mt-7 w-full text-lg leading-loose text-zinc-900"
     >
