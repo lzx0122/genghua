@@ -19,9 +19,6 @@ onMounted(async () => {
 });
 
 const amount = ref(1);
-watch(amount, () => {
-  if (amount.value < 1) amount.value = 1;
-});
 
 // **計算篩選後的選項**
 const filteredOptions = computed(() => {
@@ -37,6 +34,11 @@ const selectOption = (option) => {
   searchText.value = option.Name; // 設定輸入框的值
   selectedId.value = option.ItemId; // 記住選中的 ID
   showDropdown.value = false; // 關閉下拉選單
+};
+const checkAmount = () => {
+  if (amount.value < 1) {
+    amount.value = 1;
+  }
 };
 
 const submit = async () => {
@@ -166,6 +168,8 @@ const submit = async () => {
             placeholder="寄放數量"
             min="1"
             v-model="amount"
+            @blur="checkAmount"
+            @keyup.enter="checkAmount"
             class="flex text-center max-w-[100px] gap-2.5 mr-2 py-3 h-12 bg-white rounded border-2 border-solid border-zinc-900 appearance-auto"
           />
           <svg
@@ -177,7 +181,7 @@ const submit = async () => {
             xmlns:xlink="http://www.w3.org/1999/xlink"
             xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
             class="mr-2"
-            @click="amount--"
+            @click="amount <= 1 ? 1 : amount--"
           >
             <g
               id="Page-1"
