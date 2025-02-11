@@ -157,10 +157,15 @@ let model = {
           collection(db, "Keep"),
           where("Account", "==", user.Account)
         );
+
         const queryKeep = await getDocs(q2);
         let keeps = [];
         for (const doc of queryKeep.docs) {
           // 取得 keep
+          if ("Item" in doc.data()) {
+            keeps.push({ id: doc.id, ...doc.data() });
+            continue
+          }
           let item = await this.getItemById(doc.data().ItemId);
           keeps.push({ id: doc.id, ...doc.data(), Item: item });
         }
