@@ -11,25 +11,19 @@ const amount = ref(1);
 
 const checkAmount = () => {
   if (amount.value < 1) amount.value = 1;
-  if (amount.value > selectKeepsData.value.RemainingAmount)
-    amount.value = selectKeepsData.value.RemainingAmount;
+  if (amount.value > props.selectKeepsData.RemainingAmount)
+    amount.value = props.selectKeepsData.RemainingAmount;
 };
 
 const submit = async () => {
   isLoading.value = true;
-  await AddKeepPickup(selectKeepsData.value.id, amount.value);
-  await GetAdminSearchUserDataByAccount(selectKeepsData.value.Account);
+  await AddKeepPickup(props.selectKeepsData.id, amount.value);
+  await GetAdminSearchUserDataByAccount(props.selectKeepsData.Account);
   isLoading.value = false;
+  amount.value = 1;
   emit("logsHandler");
   emit("close");
 };
-
-watch(
-  () => props.show,
-  () => {
-    amount.value = 1;
-  }
-);
 </script>
 
 <template>
@@ -65,7 +59,7 @@ watch(
           <div
             class="relative w-60 w-full border border-black rounded p-2 bg-white text-black"
           >
-            {{ selectKeepsData?.Item.Name }}
+            {{ props.selectKeepsData?.Item.Name }}
           </div>
         </div>
         <div>
@@ -78,7 +72,7 @@ watch(
           <div
             class="relative w-60 border border-black w-full rounded p-2 bg-white"
           >
-            {{ selectKeepsData?.Amount }}
+            {{ props.selectKeepsData?.Amount }}
           </div>
         </div>
         <div>
@@ -91,7 +85,7 @@ watch(
           <div
             class="relative w-60 border border-black w-full rounded p-2 bg-white"
           >
-            {{ selectKeepsData?.RemainingAmount }}
+            {{ props.selectKeepsData?.RemainingAmount }}
           </div>
         </div>
       </div>
@@ -152,8 +146,8 @@ watch(
             xmlns:xlink="http://www.w3.org/1999/xlink"
             xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
             @click="
-              amount >= selectKeepsData.RemainingAmount
-                ? (amount = selectKeepsData.RemainingAmount)
+              amount >= props.selectKeepsData.RemainingAmount
+                ? (amount = props.selectKeepsData.RemainingAmount)
                 : amount++
             "
           >
@@ -186,7 +180,7 @@ watch(
       >
         <div
           class="gap-1.5 self-stretch px-5 py-2 text-black rounded-lg border border-solid border-zinc-400"
-          @click="$emit('close')"
+          @click="$emit('close'), (amount = 1)"
         >
           關閉
         </div>
