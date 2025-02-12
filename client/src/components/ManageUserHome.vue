@@ -1,10 +1,11 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, defineEmits } from "vue";
 import { useDataStore } from "../stores/Data";
 import AddKeepModal from "./AddKeepModal.vue";
 import EditKeepModal from "./EditKeepModal.vue";
 import { storeToRefs } from "pinia";
 import dayjs from "dayjs";
+const emit = defineEmits(["logsHandler"]);
 const DataStore = useDataStore();
 const { GetItemData } = DataStore;
 const { AdminSearchUsersData, ItemData } = storeToRefs(DataStore);
@@ -27,12 +28,14 @@ const editKeephandler = (data) => {
   <AddKeepModal
     :ItemData="ItemData"
     :show="showAddKeepModal"
+    @logsHandler="emit('logsHandler')"
     @close="showAddKeepModal = false"
   >
   </AddKeepModal>
   <EditKeepModal
     :selectKeepsData="selectKeepsData"
     :show="showEditKeepModal"
+    @logsHandler="emit('logsHandler')"
     @close="showEditKeepModal = false"
   ></EditKeepModal>
 

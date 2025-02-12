@@ -1,13 +1,14 @@
 <script setup>
-import { ref, watch, computed, onMounted } from "vue";
+import { ref, computed, onMounted, defineEmits } from "vue";
 import { storeToRefs } from "pinia";
 import { useDataStore } from "../stores/Data";
 import { useToast } from "vue-toastification";
-
+const toast = useToast();
 const DataStore = useDataStore();
-const { GetItemData, AddKeep } = DataStore;
+const { GetItemData, AddKeep, GetAdminSearchUserDataByAccount } = DataStore;
 const { AdminSearchUsersData, ItemData } = storeToRefs(DataStore);
 defineProps(["show", "ItemData"]);
+const emit = defineEmits(["logsHandler", "close"]);
 const isUseItemDatabase = ref(false);
 const searchText = ref("");
 const selectedId = ref(null);
@@ -42,6 +43,22 @@ const checkAmount = () => {
 };
 
 const submit = async () => {
+  if (!isUseItemDatabase.value && isUseItemDatabase.value) {
+    toast.error("品名不可為空", {
+      position: "top-center",
+      timeout: 3000,
+      closeOnClick: true,
+      pauseOnFocusLoss: true,
+      pauseOnHover: true,
+      draggable: true,
+      draggablePercent: 0.6,
+      showCloseButtonOnHover: false,
+      hideProgressBar: true,
+      closeButton: "button",
+      icon: true,
+      rtl: false,
+    });
+  }
   if (isUseItemDatabase.value && !selectedId.value) {
     toast.error("選擇清單模式，請從選單中選取一個品項", {
       position: "top-center",
@@ -66,8 +83,10 @@ const submit = async () => {
     itemId: isUseItemDatabase.value ? selectedId.value : null,
     itemName: isUseItemDatabase.value ? null : searchText.value,
   });
+  await GetAdminSearchUserDataByAccount(AdminSearchUsersData.value[0].Account);
   isLoading.value = false;
-  window.location.reload();
+  emit("logsHandler");
+  emit("close");
 };
 </script>
 

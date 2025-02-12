@@ -1,11 +1,9 @@
 <script setup>
-import { useToast } from "vue-toastification";
 import { storeToRefs } from "pinia";
 import { useDataStore } from "../stores/Data";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
-const toast = useToast();
 const DataStore = useDataStore();
 const { UserSearchData } = storeToRefs(DataStore);
 const { GetUserSearchData } = DataStore;

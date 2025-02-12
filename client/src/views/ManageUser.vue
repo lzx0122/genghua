@@ -70,6 +70,7 @@ const activeTabsComponent = computed(() => {
 });
 const getProps = computed(() => {
   if (tabindex.value == 1) return { userlogs: userlogs.value };
+
   return {};
 });
 onMounted(async () => {
@@ -125,7 +126,11 @@ watch(
     role="main"
     aria-label="Member Warehouse Section"
   >
-    <component :is="activeTabsComponent" v-bind="getProps"></component>
+    <component
+      :is="activeTabsComponent"
+      @logsHandler="logsHandler"
+      v-bind="getProps"
+    ></component>
   </div>
 </template>
 

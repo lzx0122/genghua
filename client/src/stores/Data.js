@@ -297,6 +297,21 @@ export const useDataStore = defineStore("data", () => {
           withCredentials: true,
         }
       );
+
+      toast.success("領取成功", {
+        position: "top-center",
+        timeout: 3000,
+        closeOnClick: true,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        draggable: true,
+        draggablePercent: 0.6,
+        showCloseButtonOnHover: false,
+        hideProgressBar: true,
+        closeButton: "button",
+        icon: true,
+        rtl: false,
+      });
     } catch (e) {
       if (err.response?.status === 500) {
         toast.error(err.response.data, {
@@ -329,5 +344,6 @@ export const useDataStore = defineStore("data", () => {
     GetItemData,
     ItemData,
     AddKeepPickup,
+    AddKeep,
   };
 });

@@ -1,10 +1,9 @@
 <script setup>
-import { ref, watch, computed, onMounted } from "vue";
-import { storeToRefs } from "pinia";
+import { ref, defineEmits } from "vue";
 import { useDataStore } from "../stores/Data";
 const DataStore = useDataStore();
-const { AddKeepPickup } = DataStore;
-
+const { AddKeepPickup, GetAdminSearchUserDataByAccount } = DataStore;
+const emit = defineEmits(["logsHandler", "close"]);
 const { selectKeepsData } = defineProps(["selectKeepsData", "show"]);
 const isLoading = ref(false);
 
@@ -12,13 +11,17 @@ const amount = ref(1);
 
 const checkAmount = () => {
   if (amount.value < 1) amount.value = 1;
-  if (amount.value > selectKeepsData.RemainingAmount)
-    amount.value = selectKeepsData.RemainingAmount;
+  // if (amount.value > selectKeepsData.RemainingAmount)
+  //   amount.value = selectKeepsData.RemainingAmount;
 };
 
-const submit = () => {
-  console.log(selectKeepsData, amount);
-  AddKeepPickup(selectKeepsData.id, amount.value);
+const submit = async () => {
+  isLoading.value = true;
+  await AddKeepPickup(selectKeepsData.id, amount.value);
+  await GetAdminSearchUserDataByAccount(selectKeepsData.Account);
+  isLoading.value = false;
+  emit("logsHandler");
+  emit("close");
 };
 </script>
 
