@@ -28,6 +28,7 @@ const tabs = [
 const tabindex = ref(0);
 const logsHandler = () => {
   for (const [index, keep] of UserSearchData.value.Keeps.entries()) {
+    let remainingAmountTemp = UserSearchData.value.Keeps[index].Amount;
     userlogs.value.push({
       index: index,
       title: `${keep.Item.Name} +${keep.Amount}`,
@@ -39,7 +40,7 @@ const logsHandler = () => {
     });
 
     let picktemp = keep.Pickup.map((e) => {
-      UserSearchData.value.Keeps[index].Amount -= e.Amount;
+      remainingAmountTemp -= e.Amount;
       return {
         index: index,
         title: `${keep.Item.Name} -${e.Amount}`,
@@ -50,6 +51,7 @@ const logsHandler = () => {
         desc: "領取",
       };
     });
+    UserSearchData.value.Keeps[index].RemainingAmount = remainingAmountTemp;
     userlogs.value.push(...picktemp);
   }
   userlogs.value.sort((a, b) => b.timestamp - a.timestamp);

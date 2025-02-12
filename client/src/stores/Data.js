@@ -6,10 +6,9 @@ const toast = useToast();
 export const useDataStore = defineStore("data", () => {
   const Title = ref("");
   const UserSearchData = ref(null);
-  const AdminSearchUsersData = ref(null)
+  const AdminSearchUsersData = ref(null);
   const ToggleMenu = ref(false);
-  const ItemData = ref(null)
-
+  const ItemData = ref(null);
 
   const GetUserSearchData = async (account) => {
     try {
@@ -52,14 +51,18 @@ export const useDataStore = defineStore("data", () => {
         icon: true,
         rtl: false,
       });
-
     }
   };
 
   const GetAdminSearchUserDataByDate = async (date) => {
     try {
       let res = await axios.get(`/coffee/admin/users/date/${date}`, {
-        headers: { "Cache-Control": "no-cache", "Authorization": `Bearer ${localStorage.getItem('genghua-token') || ""}` },
+        headers: {
+          "Cache-Control": "no-cache",
+          Authorization: `Bearer ${
+            localStorage.getItem("genghua-token") || ""
+          }`,
+        },
         withCredentials: true,
       });
 
@@ -81,7 +84,7 @@ export const useDataStore = defineStore("data", () => {
         rtl: false,
       });
     }
-  }
+  };
 
   const GetAdminSearchUserDataByAccount = async (account) => {
     try {
@@ -103,7 +106,12 @@ export const useDataStore = defineStore("data", () => {
         return false;
       }
       let res = await axios.get(`/coffee/admin/user/account/${account}`, {
-        headers: { "Cache-Control": "no-cache", "Authorization": `Bearer ${localStorage.getItem('genghua-token') || ""}` },
+        headers: {
+          "Cache-Control": "no-cache",
+          Authorization: `Bearer ${
+            localStorage.getItem("genghua-token") || ""
+          }`,
+        },
         withCredentials: true,
       });
 
@@ -124,9 +132,8 @@ export const useDataStore = defineStore("data", () => {
         icon: true,
         rtl: false,
       });
-
     }
-  }
+  };
 
   const AddUser = async (userData) => {
     if (
@@ -152,7 +159,6 @@ export const useDataStore = defineStore("data", () => {
     }
 
     try {
-
       await axios.post(
         "/coffee/admin/user",
         { ...userData },
@@ -160,8 +166,9 @@ export const useDataStore = defineStore("data", () => {
           withCredentials: true,
           headers: {
             "Cache-Control": "no-cache",
-            Authorization: `Bearer ${localStorage.getItem("genghua-token") || ""
-              }`,
+            Authorization: `Bearer ${
+              localStorage.getItem("genghua-token") || ""
+            }`,
           },
         }
       );
@@ -198,12 +205,10 @@ export const useDataStore = defineStore("data", () => {
         });
       }
     }
-
-  }
+  };
 
   const AddKeep = async (keepData) => {
     try {
-
       await axios.post(
         "/coffee/admin/keep",
         { ...keepData },
@@ -211,8 +216,9 @@ export const useDataStore = defineStore("data", () => {
           withCredentials: true,
           headers: {
             "Cache-Control": "no-cache",
-            Authorization: `Bearer ${localStorage.getItem("genghua-token") || ""
-              }`,
+            Authorization: `Bearer ${
+              localStorage.getItem("genghua-token") || ""
+            }`,
           },
         }
       );
@@ -249,20 +255,13 @@ export const useDataStore = defineStore("data", () => {
         });
       }
     }
-  }
+  };
 
   const GetItemData = async () => {
-
     try {
+      let res = await axios.get("/coffee/item");
 
-      let res = await axios.get("/coffee/item", {
-        headers: { "Cache-Control": "no-cache" },
-        withCredentials: true,
-      });
-
-      ItemData.value = res.data
-
-
+      ItemData.value = res.data;
     } catch (err) {
       if (err.response?.status === 500) {
         toast.error(err.response.data, {
@@ -280,12 +279,43 @@ export const useDataStore = defineStore("data", () => {
           rtl: false,
         });
       }
-
     }
+  };
 
-  }
-
-
+  const AddKeepPickup = async (id, amount) => {
+    try {
+      await axios.post(
+        `/coffee/admin/keep/pickup/${id}`,
+        { amount: amount },
+        {
+          headers: {
+            "Cache-Control": "no-cache",
+            Authorization: `Bearer ${
+              localStorage.getItem("genghua-token") || ""
+            }`,
+          },
+          withCredentials: true,
+        }
+      );
+    } catch (e) {
+      if (err.response?.status === 500) {
+        toast.error(err.response.data, {
+          position: "top-center",
+          timeout: 3000,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: true,
+          closeButton: "button",
+          icon: true,
+          rtl: false,
+        });
+      }
+    }
+  };
 
   return {
     Title,
@@ -295,6 +325,9 @@ export const useDataStore = defineStore("data", () => {
     AdminSearchUsersData,
     GetAdminSearchUserDataByAccount,
     GetAdminSearchUserDataByDate,
-    AddUser, GetItemData, ItemData, AddKeep
+    AddUser,
+    GetItemData,
+    ItemData,
+    AddKeepPickup,
   };
 });

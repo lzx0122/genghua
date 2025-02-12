@@ -73,7 +73,10 @@ const sortKeeps = computed(() =>
               {{ keep.Item.Name }}
             </div>
             <div class="mt-1 text-xs tracking-wide">
-              剩餘數量: {{ keep.Amount }}
+              總數量: {{ keep.Amount }}
+            </div>
+            <div class="mt-1 text-xs tracking-wide">
+              剩餘數量: {{ keep.RemainingAmount }}
             </div>
             <div class="text-xs tracking-wide">
               {{

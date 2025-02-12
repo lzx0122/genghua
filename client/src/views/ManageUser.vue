@@ -28,6 +28,8 @@ const tabs = [
 const tabindex = ref(0);
 const logsHandler = () => {
   for (const [index, keep] of AdminSearchUsersData.value[0].Keeps.entries()) {
+    let remainingAmountTemp = AdminSearchUsersData.value[0].Keeps[index].Amount;
+
     userlogs.value.push({
       index: index,
       title: `${keep.Item.Name} +${keep.Amount}`,
@@ -39,7 +41,9 @@ const logsHandler = () => {
     });
 
     let picktemp = keep.Pickup.map((e) => {
-      AdminSearchUsersData.value[0].Keeps[index].Amount -= e.Amount;
+      //刪減領取數量
+      remainingAmountTemp -= e.Amount;
+
       return {
         index: index,
         title: `${keep.Item.Name} -${e.Amount}`,
@@ -50,6 +54,8 @@ const logsHandler = () => {
         desc: "領取",
       };
     });
+    AdminSearchUsersData.value[0].Keeps[index].RemainingAmount =
+      remainingAmountTemp;
     userlogs.value.push(...picktemp);
   }
   userlogs.value.sort((a, b) => b.timestamp - a.timestamp);

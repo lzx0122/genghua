@@ -2,17 +2,25 @@
 import { ref, computed } from "vue";
 import { useDataStore } from "../stores/Data";
 import AddKeepModal from "./AddKeepModal.vue";
+import EditKeepModal from "./EditKeepModal.vue";
 import { storeToRefs } from "pinia";
 import dayjs from "dayjs";
 const DataStore = useDataStore();
 const { GetItemData } = DataStore;
 const { AdminSearchUsersData, ItemData } = storeToRefs(DataStore);
 const showAddKeepModal = ref(false);
+const showEditKeepModal = ref(false);
+const selectKeepsData = ref(null);
 const sortKeeps = computed(() =>
   [...AdminSearchUsersData.value[0].Keeps].sort(
     (a, b) => b.DateTime.seconds - a.DateTime.seconds
   )
 );
+
+const editKeephandler = (data) => {
+  selectKeepsData.value = data;
+  showEditKeepModal.value = true;
+};
 </script>
 
 <template>
@@ -22,6 +30,12 @@ const sortKeeps = computed(() =>
     @close="showAddKeepModal = false"
   >
   </AddKeepModal>
+  <EditKeepModal
+    :selectKeepsData="selectKeepsData"
+    :show="showEditKeepModal"
+    @close="showEditKeepModal = false"
+  ></EditKeepModal>
+
   <div class="flex flex-col px-4 mt-3.5 w-full">
     <div
       class="flex flex-col items-start self-center px-4 py-4 w-full rounded-lg border-4 border-solid border-zinc-800 max-w-[335px] text-zinc-800"
@@ -75,10 +89,11 @@ const sortKeeps = computed(() =>
         <div
           v-for="(keep, index) in sortKeeps"
           :key="keep.id"
-          class="flex flex-col w-[150px] shrink-0"
+          class="flex flex-col w-[150px] shrink-0 cursor-pointer"
           tabindex="0"
           role="article"
           aria-label="Large Latte Stock"
+          @click="editKeephandler(keep)"
         >
           <div
             class="flex overflow-hidden flex-col justify-center items-center px-4 py-10 w-full border-2 border-solid bg-zinc-100 border-zinc-900 rounded-t-lg"
@@ -100,7 +115,10 @@ const sortKeeps = computed(() =>
               {{ keep.Item.Name }}
             </div>
             <div class="mt-1 text-xs tracking-wide">
-              剩餘數量: {{ keep.Amount }}
+              總數量: {{ keep.Amount }}
+            </div>
+            <div class="mt-1 text-xs tracking-wide">
+              剩餘數量: {{ keep.RemainingAmount }}
             </div>
             <div class="text-xs tracking-wide">
               {{

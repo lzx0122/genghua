@@ -13,7 +13,7 @@ const {
   updateDoc,
   Timestamp,
 } = require("firebase/firestore");
-require('dotenv').config()
+require("dotenv").config();
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -33,7 +33,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 
 function formatDate(timestamp) {
   const date = new Date(parseInt(timestamp));
@@ -63,7 +62,7 @@ let model = {
         Date: Timestamp.fromMillis(date),
         Email: email,
         Desc: desc,
-        MonthDay: formatDate(date)
+        MonthDay: formatDate(date),
       });
 
       return {
@@ -93,7 +92,6 @@ let model = {
     }
   },
   async getUserByAccount(accountNumber) {
-
     try {
       // 建立查詢條件
       const q = query(
@@ -119,7 +117,7 @@ let model = {
 
         if ("Item" in doc.data()) {
           keeps.push({ id: doc.id, ...doc.data() });
-          continue
+          continue;
         }
         let item = await this.getItemById(doc.data().ItemId);
         delete item.Desc;
@@ -164,7 +162,7 @@ let model = {
           // 取得 keep
           if ("Item" in doc.data()) {
             keeps.push({ id: doc.id, ...doc.data() });
-            continue
+            continue;
           }
           let item = await this.getItemById(doc.data().ItemId);
           keeps.push({ id: doc.id, ...doc.data(), Item: item });
@@ -311,7 +309,6 @@ let model = {
   //keep
   async addKeep(account, adminId, itemId, itemName, amount, date) {
     try {
-
       if (!(await this.getUserByAccount(account))) {
         throw new Error("此用戶不存在");
       }
@@ -324,20 +321,19 @@ let model = {
         Amount: parseInt(amount),
         DateTime: Timestamp.fromMillis(date),
         Pickup: [],
-      }
+      };
 
       if (itemName) {
-        data.Item = { Name: itemName }
+        data.Item = { Name: itemName };
       } else {
-
-        data.ItemId = itemId
+        data.ItemId = itemId;
       }
 
       const docRef = await addDoc(collection(db, "Keep"), data);
 
       return {
         id: docRef.id,
-        ...data
+        ...data,
       };
     } catch (e) {
       throw new Error("新增寄放商品資料失敗：" + e.message);
@@ -380,7 +376,11 @@ let model = {
       }
       let data = docSnap.data();
 
-      data.Pickup.push({ DateTime: Timestamp.fromMillis(date), AdminId: adminId, Amount: count });
+      data.Pickup.push({
+        DateTime: Timestamp.fromMillis(date),
+        AdminId: adminId,
+        Amount: amount,
+      });
       await updateDoc(docRef, {
         Pickup: data.Pickup, // 新後的 Pickup
       });

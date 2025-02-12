@@ -2,72 +2,23 @@
 import { ref, watch, computed, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useDataStore } from "../stores/Data";
-import { useToast } from "vue-toastification";
-
 const DataStore = useDataStore();
-const { GetItemData, AddKeep } = DataStore;
-const { AdminSearchUsersData, ItemData } = storeToRefs(DataStore);
-defineProps(["show", "ItemData"]);
-const isUseItemDatabase = ref(false);
-const searchText = ref("");
-const selectedId = ref(null);
-const showDropdown = ref(false);
-const isLoading = ref(false);
+const { AddKeepPickup } = DataStore;
 
-onMounted(async () => {
-  await GetItemData();
-});
+const { selectKeepsData } = defineProps(["selectKeepsData", "show"]);
+const isLoading = ref(false);
 
 const amount = ref(1);
 
-// **計算篩選後的選項**
-const filteredOptions = computed(() => {
-  if (!searchText.value) return ItemData.value;
-
-  return ItemData.value.filter((option) =>
-    option.Name.toLowerCase().includes(searchText.value.toLowerCase())
-  );
-});
-
-// **選擇某個選項時**
-const selectOption = (option) => {
-  searchText.value = option.Name; // 設定輸入框的值
-  selectedId.value = option.ItemId; // 記住選中的 ID
-  showDropdown.value = false; // 關閉下拉選單
-};
 const checkAmount = () => {
-  if (amount.value < 1) {
-    amount.value = 1;
-  }
+  if (amount.value < 1) amount.value = 1;
+  if (amount.value > selectKeepsData.RemainingAmount)
+    amount.value = selectKeepsData.RemainingAmount;
 };
 
-const submit = async () => {
-  if (isUseItemDatabase.value && !selectedId.value) {
-    toast.error("選擇清單模式，請從選單中選取一個品項", {
-      position: "top-center",
-      timeout: 3000,
-      closeOnClick: true,
-      pauseOnFocusLoss: true,
-      pauseOnHover: true,
-      draggable: true,
-      draggablePercent: 0.6,
-      showCloseButtonOnHover: false,
-      hideProgressBar: true,
-      closeButton: "button",
-      icon: true,
-      rtl: false,
-    });
-    return;
-  }
-  isLoading.value = true;
-  await AddKeep({
-    account: AdminSearchUsersData.value[0].Account,
-    amount: amount.value,
-    itemId: isUseItemDatabase.value ? selectedId.value : null,
-    itemName: isUseItemDatabase.value ? null : searchText.value,
-  });
-  isLoading.value = false;
-  window.location.reload();
+const submit = () => {
+  console.log(selectKeepsData, amount);
+  AddKeepPickup(selectKeepsData.id, amount.value);
 };
 </script>
 
@@ -89,83 +40,60 @@ const submit = async () => {
     <section
       class="modal-container flex overflow-hidden flex-col items-start px-7 py-6 w-full bg-white rounded-3xl border-solid border-[3px] border-[color:var(--black,#1B1B1B)]"
     >
-      <p class="text-2xl tracking-wide text-zinc-900">新增寄放商品</p>
+      <p class="text-2xl tracking-wide text-zinc-900">寄放商品領取</p>
 
       <div
         class="flex flex-col justify-start mt-4 w-full text-lg leading-loose rounded max-w-[335px] text-zinc-900"
       >
-        <div class="flex">
+        <div>
           <label
             for="itemName"
             class="text-left truncate w-[120px] w-max-[120px]"
-            >選擇商品</label
+            >商品名稱</label
           >
-          <input
-            type="checkbox"
-            id="customCheckbox"
-            class="sr-only"
-            aria-label="Custom checkbox"
-            v-model="isUseItemDatabase"
-          />
-          <label
-            for="customCheckbox"
-            class="flex w-full cursor-pointer items-center justify-center"
+          <!-- 搜尋輸入框 -->
+          <div
+            class="relative w-60 w-full border border-black rounded p-2 bg-white text-black"
           >
-            <div
-              class="flex h-4 w-4 items-center justify-center rounded-sm border-2 border-zinc-900"
-            >
-              <svg
-                class="hidden h-3 w-3 text-zinc-900"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </div>
-          </label>
+            {{ selectKeepsData?.Item.Name }}
+          </div>
         </div>
-
-        <!-- 搜尋輸入框 -->
-        <div class="relative w-60">
-          <input
-            id="itemName"
-            v-model="searchText"
-            @focus="showDropdown = true"
-            @input="showDropdown = true"
-            @blur="showDropdown = false"
-            type="text"
-            placeholder="輸入飲料名稱"
-            class="border border-black w-full rounded p-2 bg-white"
-          />
-
-          <ul
-            v-if="showDropdown && filteredOptions.length && isUseItemDatabase"
-            class="absolute text-xs w-full text-black border border-black bg-white rounded shadow-sm max-h-40 max-w-[230px] overflow-auto top-full mt-1 z-50"
+        <div>
+          <label
+            for="itemName"
+            class="text-left truncate w-[120px] w-max-[120px]"
+            >商品數量</label
           >
-            <li
-              v-for="option in filteredOptions"
-              :key="option.id"
-              @mousedown.prevent="selectOption(option)"
-              class="p-2 hover:bg-gray-200 cursor-pointer"
-            >
-              {{ option.Name }}
-            </li>
-          </ul>
+          <!-- 搜尋輸入框 -->
+          <div
+            class="relative w-60 border border-black w-full rounded p-2 bg-white"
+          >
+            {{ selectKeepsData?.Amount }}
+          </div>
+        </div>
+        <div>
+          <label
+            for="itemName"
+            class="text-left truncate w-[120px] w-max-[120px]"
+            >商品剩餘</label
+          >
+          <!-- 搜尋輸入框 -->
+          <div
+            class="relative w-60 border border-black w-full rounded p-2 bg-white"
+          >
+            {{ selectKeepsData?.RemainingAmount }}
+          </div>
         </div>
       </div>
       <div
         class="flex flex-col mt-4 w-full text-lg leading-loose rounded max-w-[335px] text-zinc-900"
       >
-        <label for="amount" class="self-start">寄放數量* </label>
+        <label for="amount" class="self-start">領取數量</label>
         <div class="flex items-center">
           <input
             type="number"
             id="amount"
-            placeholder="寄放數量"
+            placeholder="領取數量"
             min="1"
             v-model="amount"
             @blur="checkAmount"
@@ -213,7 +141,11 @@ const submit = async () => {
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
             xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
-            @click="amount++"
+            @click="
+              amount >= selectKeepsData.RemainingAmount
+                ? (amount = selectKeepsData.RemainingAmount)
+                : amount++
+            "
           >
             <g
               id="Page-1"
@@ -252,7 +184,7 @@ const submit = async () => {
           class="gap-1.5 self-stretch px-5 py-2 text-white rounded-lg bg-zinc-900"
           @click="submit"
         >
-          送出
+          領取
         </div>
       </footer>
     </section>
