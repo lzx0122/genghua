@@ -375,6 +375,13 @@ let model = {
         throw new Error("此Keep ID不存在");
       }
       let data = docSnap.data();
+      let counter = 0;
+      for (const p of data.Pickup) {
+        counter += p.Amount;
+      }
+
+      if (counter + amount > data.Amount)
+        throw new Error("領取失敗，領取數量不可以比剩餘數量多");
 
       data.Pickup.push({
         DateTime: Timestamp.fromMillis(date),
