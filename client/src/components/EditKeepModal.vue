@@ -1,28 +1,35 @@
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref, defineEmits, defineProps, watch } from "vue";
 import { useDataStore } from "../stores/Data";
 const DataStore = useDataStore();
 const { AddKeepPickup, GetAdminSearchUserDataByAccount } = DataStore;
 const emit = defineEmits(["logsHandler", "close"]);
-const { selectKeepsData } = defineProps(["selectKeepsData", "show"]);
+const props = defineProps(["selectKeepsData", "show"]);
 const isLoading = ref(false);
 
 const amount = ref(1);
 
 const checkAmount = () => {
   if (amount.value < 1) amount.value = 1;
-  // if (amount.value > selectKeepsData.RemainingAmount)
-  //   amount.value = selectKeepsData.RemainingAmount;
+  if (amount.value > selectKeepsData.value.RemainingAmount)
+    amount.value = selectKeepsData.value.RemainingAmount;
 };
 
 const submit = async () => {
   isLoading.value = true;
-  await AddKeepPickup(selectKeepsData.id, amount.value);
-  await GetAdminSearchUserDataByAccount(selectKeepsData.Account);
+  await AddKeepPickup(selectKeepsData.value.id, amount.value);
+  await GetAdminSearchUserDataByAccount(selectKeepsData.value.Account);
   isLoading.value = false;
   emit("logsHandler");
   emit("close");
 };
+
+watch(
+  () => props.show,
+  () => {
+    amount.value = 1;
+  }
+);
 </script>
 
 <template>
