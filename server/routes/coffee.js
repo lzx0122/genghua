@@ -233,7 +233,7 @@ router.post(
         id,
         date ?? new Date().getTime(),
         req.user.adminId,
-        amount
+        parseInt(amount)
       );
       res.status(200).send(data);
     } catch (err) {

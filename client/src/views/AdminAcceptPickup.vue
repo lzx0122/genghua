@@ -19,6 +19,7 @@ watch(
 );
 
 const submit = async () => {
+  if (isLoading.value) return;
   isLoading.value = true;
   let result = await AddKeepPickup(keepData.value.id, amount.value);
   isLoading.value = false;
