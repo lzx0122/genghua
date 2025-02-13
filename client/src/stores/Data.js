@@ -334,19 +334,17 @@ export const useDataStore = defineStore("data", () => {
 
   const GetKeepById = async (id) => {
     try {
-      let res = await axios.get(
-        `/coffee/admin/keep/${id}`,
-        { amount: amount },
-        {
-          headers: {
-            "Cache-Control": "no-cache",
-            Authorization: `Bearer ${
-              localStorage.getItem("genghua-token") || ""
-            }`,
-          },
-          withCredentials: true,
-        }
-      );
+      console.log(id);
+      let res = await axios.get(`/coffee/admin/keep/${id}`, {
+        headers: {
+          "Cache-Control": "no-cache",
+          Authorization: `Bearer ${
+            localStorage.getItem("genghua-token") || ""
+          }`,
+        },
+        withCredentials: true,
+      });
+      console.log(res);
 
       return res.data;
     } catch (err) {

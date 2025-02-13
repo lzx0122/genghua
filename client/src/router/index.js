@@ -54,7 +54,9 @@ router.beforeEach(async (to, from, next) => {
       await fetchUser();
       Title.value = "管理查詢會員";
     }
-    if (to.fullPath === "/Admin/AcceptPickup") {
+    if (
+      to.matched.some((record) => record.path.startsWith("/Admin/AcceptPickup"))
+    ) {
       await fetchUser();
       Title.value = "領取商品";
     }

@@ -315,8 +315,8 @@ let model = {
         throw new Error("此Keep ID不存在");
       }
       let data = docSnap.data();
-      if (!("Item" in doc.data())) {
-        let item = await this.getItemById(doc.data().ItemId);
+      if (!("Item" in data)) {
+        let item = await this.getItemById(data.ItemId);
         data.Item = item;
       }
 

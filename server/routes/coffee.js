@@ -161,6 +161,7 @@ router.get(
       let { keepId } = req.params;
 
       let data = await coffeModel.getKeepById(keepId);
+      console.log(data);
       res.status(200).send(data);
     } catch (err) {
       res.status(500).send(err.message);

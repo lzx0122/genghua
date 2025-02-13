@@ -1,16 +1,12 @@
 <script setup>
 import { useDataStore } from "../stores/Data";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 const DataStore = useDataStore();
 const { GetKeepById } = DataStore;
 import { useRoute } from "vue-router";
 const router = useRoute();
 const keepData = ref(null);
 const amount = ref(0);
-onMounted(async () => {
-  keepData.value = await GetKeepById(router.params.id);
-  amount.value = router.params.amount;
-});
 
 watch(
   () => router,
@@ -33,7 +29,10 @@ watch(
     :width="128"
     :loader="'Bars'"
   />
-  <div class="text-lg tracking-normal leading-none rounded-none">
+  <div
+    v-if="keepData"
+    class="text-lg tracking-normal leading-none rounded-none"
+  >
     <section
       class="flex overflow-hidden flex-col items-start px-7 py-6 w-full bg-white rounded-3xl border-solid border-[3px] border-[color:var(--black,#1B1B1B)]"
     >
