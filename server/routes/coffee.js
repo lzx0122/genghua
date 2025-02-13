@@ -115,7 +115,6 @@ router.post(
       let data = await coffeModel.addItem(itemId, name);
       res.status(200).send(data);
     } catch (err) {
-
       res.status(500).send(err.message);
     }
   }
@@ -132,7 +131,6 @@ router.put(
       let data = await coffeModel.updateItem(id, itemId, name);
       res.status(200).send(data);
     } catch (err) {
-
       res.status(500).send(err.message);
     }
   }
@@ -155,6 +153,21 @@ router.delete(
 
 //keeps
 
+router.get(
+  "/admin/keep/:keepId",
+  authMiddleware.verifyAdmin,
+  async function (req, res, next) {
+    try {
+      let { keepId } = req.params;
+
+      let data = await coffeModel.getKeepById(keepId);
+      res.status(200).send(data);
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
+  }
+);
+
 router.post(
   "/admin/keep",
   authMiddleware.verifyAdmin,
@@ -171,7 +184,6 @@ router.post(
       );
       res.status(200).send(data);
     } catch (err) {
-
       res.status(500).send(err.message);
     }
   }
@@ -187,7 +199,6 @@ router.delete(
       let data = await coffeModel.deleteKeep(keepId);
       res.status(200).send(data);
     } catch (err) {
-
       res.status(500).send(err.message);
     }
   }
@@ -204,7 +215,6 @@ router.put(
       let data = await coffeModel.updateKeep(id, itemId, parseInt(amount));
       res.status(200).send(data);
     } catch (err) {
-
       res.status(500).send(err.message);
     }
   }
@@ -226,7 +236,6 @@ router.post(
       );
       res.status(200).send(data);
     } catch (err) {
-
       res.status(500).send(err.message);
     }
   }
@@ -242,7 +251,6 @@ router.delete(
       let data = await coffeModel.deleteKeepPickup(id, index);
       res.status(200).send(data);
     } catch (err) {
-
       res.status(500).send(err.message);
     }
   }

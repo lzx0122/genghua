@@ -307,6 +307,24 @@ let model = {
     }
   },
   //keep
+  async getKeepById(id) {
+    try {
+      const docRef = doc(db, "Keep", id);
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists()) {
+        throw new Error("此Keep ID不存在");
+      }
+      let data = docSnap.data();
+      if (!("Item" in doc.data())) {
+        let item = await this.getItemById(doc.data().ItemId);
+        data.Item = item;
+      }
+
+      return data;
+    } catch (e) {
+      throw new Error("取得寄放商品資料失敗：" + e.message);
+    }
+  },
   async addKeep(account, adminId, itemId, itemName, amount, date) {
     try {
       if (!(await this.getUserByAccount(account))) {

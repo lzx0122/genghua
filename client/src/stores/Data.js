@@ -332,6 +332,43 @@ export const useDataStore = defineStore("data", () => {
     }
   };
 
+  const GetKeepById = async (id) => {
+    try {
+      let res = await axios.get(
+        `/coffee/admin/keep/${id}`,
+        { amount: amount },
+        {
+          headers: {
+            "Cache-Control": "no-cache",
+            Authorization: `Bearer ${
+              localStorage.getItem("genghua-token") || ""
+            }`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      return res.data;
+    } catch (err) {
+      if (err.response?.status === 500) {
+        toast.error(err.response.data, {
+          position: "top-center",
+          timeout: 3000,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: true,
+          closeButton: "button",
+          icon: true,
+          rtl: false,
+        });
+      }
+    }
+  };
+
   return {
     Title,
     UserSearchData,
@@ -345,5 +382,6 @@ export const useDataStore = defineStore("data", () => {
     ItemData,
     AddKeepPickup,
     AddKeep,
+    GetKeepById,
   };
 });
