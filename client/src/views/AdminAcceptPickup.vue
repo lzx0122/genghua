@@ -3,13 +3,14 @@ import { useDataStore } from "../stores/Data";
 import { ref, onMounted, watch } from "vue";
 const DataStore = useDataStore();
 const { GetKeepById, AddKeepPickup } = DataStore;
-import { useRoute } from "vue-router";
-const router = useRoute();
+import { useRoute, useRouter } from "vue-router";
+const route = useRoute();
+const router = useRouter();
 const keepData = ref(null);
 const amount = ref(0);
 const isLoading = ref(false);
 watch(
-  () => router,
+  () => route,
   async (newRoute) => {
     keepData.value = await GetKeepById(newRoute.params.id);
     amount.value = newRoute.params.amount;
