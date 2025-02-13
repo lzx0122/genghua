@@ -2,12 +2,12 @@
 import { useDataStore } from "../stores/Data";
 import { ref, onMounted, watch } from "vue";
 const DataStore = useDataStore();
-const { GetKeepById } = DataStore;
+const { GetKeepById, AddKeepPickup } = DataStore;
 import { useRoute } from "vue-router";
 const router = useRoute();
 const keepData = ref(null);
 const amount = ref(0);
-
+const isLoading = ref(false);
 watch(
   () => router,
   async (newRoute) => {
@@ -16,6 +16,15 @@ watch(
   },
   { immediate: true }
 );
+
+const submit = async () => {
+  isLoading.value = true;
+  let result = await AddKeepPickup(props.params.id, amount.value);
+  isLoading.value = false;
+  if (result) {
+    router.push({ path: "/User/Search" });
+  }
+};
 </script>
 
 <template>
@@ -29,12 +38,13 @@ watch(
     :width="128"
     :loader="'Bars'"
   />
+  <div class="min-h-[76px]"></div>
   <div
     v-if="keepData"
     class="text-lg tracking-normal leading-none rounded-none"
   >
     <section
-      class="flex overflow-hidden flex-col items-start px-7 py-6 w-full bg-white rounded-3xl border-solid border-[3px] border-[color:var(--black,#1B1B1B)]"
+      class="flex overflow-hidden flex-col items-start max-w-[335px] mx-auto px-7 py-6 bg-white rounded-3xl"
     >
       <p class="text-2xl tracking-wide text-zinc-900">寄放商品領取</p>
 
@@ -58,7 +68,7 @@ watch(
           <label
             for="itemName"
             class="text-left truncate w-[120px] w-max-[120px]"
-            >商品數量</label
+            >領取數量</label
           >
           <!-- 搜尋輸入框 -->
           <div
@@ -66,6 +76,16 @@ watch(
           >
             {{ amount }}
           </div>
+        </div>
+      </div>
+      <div
+        class="flex gap-5 justify-center mt-14 w-full text-center whitespace-nowrap"
+      >
+        <div
+          class="gap-1.5 self-stretch px-5 py-2 text-white rounded-lg bg-zinc-900"
+          @click="submit"
+        >
+          接受
         </div>
       </div>
     </section>

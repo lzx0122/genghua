@@ -1,18 +1,31 @@
 <script setup>
 import { useDataStore } from "../stores/Data";
-import { computed } from "vue";
+import { ref, computed } from "vue";
+import RequestKeepPickupModal from "./RequestKeepPickupModal.vue";
 const DataStore = useDataStore();
 import { storeToRefs } from "pinia";
 import dayjs from "dayjs";
 const { UserSearchData } = storeToRefs(DataStore);
+const showRequestKeepPickupModal = ref(false);
+const selectKeepData = ref(null);
 const sortKeeps = computed(() =>
   [...UserSearchData.value.Keeps].sort(
     (a, b) => b.DateTime.seconds - a.DateTime.seconds
   )
 );
+
+const RequestKeepPickupHandler = (data) => {
+  selectKeepData.value = data;
+  showRequestKeepPickupModal.value = true;
+};
 </script>
 
 <template>
+  <RequestKeepPickupModal
+    :show="showRequestKeepPickupModal"
+    :selectKeepData="selectKeepData"
+    @close="showRequestKeepPickupModal = false"
+  ></RequestKeepPickupModal>
   <div class="flex flex-col px-4 mt-3.5 w-full">
     <div
       class="flex flex-col items-start self-center px-4 py-4 w-full rounded-lg border-4 border-solid border-zinc-800 max-w-[335px] text-zinc-800"
@@ -52,6 +65,7 @@ const sortKeeps = computed(() =>
           tabindex="0"
           role="article"
           aria-label="Large Latte Stock"
+          @click="RequestKeepPickupHandler(keep)"
         >
           <div
             class="flex overflow-hidden flex-col justify-center items-center px-4 py-10 w-full border-2 border-solid bg-zinc-100 border-zinc-900 rounded-t-lg"

@@ -1,28 +1,23 @@
 <script setup>
-import { ref, defineEmits, defineProps, watch } from "vue";
-import { useDataStore } from "../stores/Data";
-const DataStore = useDataStore();
-const { AddKeepPickup, GetAdminSearchUserDataByAccount } = DataStore;
-const emit = defineEmits(["logsHandler", "close"]);
-const props = defineProps(["selectKeepsData", "show"]);
+import { ref, defineEmits, defineProps } from "vue";
+import QrcodeVue from "qrcode.vue";
+import axios from "axios";
+const emit = defineEmits(["close"]);
+const props = defineProps(["selectKeepData", "show"]);
 const isLoading = ref(false);
-
 const amount = ref(1);
+const requestUrl = ref("");
 
 const checkAmount = () => {
   if (amount.value < 1) amount.value = 1;
-  if (amount.value > props.selectKeepsData.RemainingAmount)
-    amount.value = props.selectKeepsData.RemainingAmount;
+  if (amount.value > props.selectKeepData.RemainingAmount)
+    amount.value = props.selectKeepData.RemainingAmount;
 };
 
 const submit = async () => {
-  isLoading.value = true;
-  await AddKeepPickup(props.selectKeepsData.id, amount.value);
-  await GetAdminSearchUserDataByAccount(props.selectKeepsData.Account);
-  isLoading.value = false;
-  amount.value = 1;
-  emit("logsHandler");
-  emit("close");
+  requestUrl.value =
+    axios.defaults.clientBaseURL +
+    `/Admin/AcceptPickup/${props.selectKeepData.id}/${amount.value}`;
 };
 </script>
 
@@ -47,7 +42,7 @@ const submit = async () => {
       <p class="text-2xl tracking-wide text-zinc-900">寄放商品領取</p>
 
       <div
-        class="flex flex-col justify-start mt-4 w-full text-lg leading-loose rounded max-w-[335px] text-zinc-900"
+        class="flex flex-col justify-start mt-1 w-full text-lg leading-loose rounded max-w-[335px] text-zinc-900"
       >
         <div>
           <label
@@ -59,7 +54,7 @@ const submit = async () => {
           <div
             class="relative w-60 w-full border border-black rounded p-2 bg-white text-black"
           >
-            {{ props.selectKeepsData?.Item.Name }}
+            {{ props.selectKeepData?.Item.Name }}
           </div>
         </div>
         <div>
@@ -72,7 +67,7 @@ const submit = async () => {
           <div
             class="relative w-60 border border-black w-full rounded p-2 bg-white"
           >
-            {{ props.selectKeepsData?.Amount }}
+            {{ props.selectKeepData?.Amount }}
           </div>
         </div>
         <div>
@@ -85,7 +80,7 @@ const submit = async () => {
           <div
             class="relative w-60 border border-black w-full rounded p-2 bg-white"
           >
-            {{ props.selectKeepsData?.RemainingAmount }}
+            {{ props.selectKeepData?.RemainingAmount }}
           </div>
         </div>
       </div>
@@ -146,8 +141,8 @@ const submit = async () => {
             xmlns:xlink="http://www.w3.org/1999/xlink"
             xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
             @click="
-              amount >= props.selectKeepsData.RemainingAmount
-                ? (amount = props.selectKeepsData.RemainingAmount)
+              amount >= props.selectKeepData.RemainingAmount
+                ? (amount = props.selectKeepData.RemainingAmount)
                 : amount++
             "
           >
@@ -176,11 +171,11 @@ const submit = async () => {
         </div>
       </div>
       <footer
-        class="flex gap-5 justify-between mt-14 w-full text-center whitespace-nowrap"
+        class="flex gap-5 justify-between mt-1 w-full text-center whitespace-nowrap"
       >
         <div
           class="gap-1.5 self-stretch px-5 py-2 text-black rounded-lg border border-solid border-zinc-400"
-          @click="$emit('close'), (amount = 1)"
+          @click="$emit('close'), (amount = 1), (requestUrl = '')"
         >
           關閉
         </div>
@@ -191,6 +186,10 @@ const submit = async () => {
           領取
         </div>
       </footer>
+      <div class="mt-3 mx-auto text-red-500" v-if="requestUrl !== ''">
+        <qrcode-vue :value="requestUrl" :size="150" level="H"></qrcode-vue>
+        <div class="mt-1">領取數量: {{ requestUrl.split("/").pop() }}</div>
+      </div>
     </section>
   </div>
 </template>

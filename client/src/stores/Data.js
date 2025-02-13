@@ -312,6 +312,7 @@ export const useDataStore = defineStore("data", () => {
         icon: true,
         rtl: false,
       });
+      return true;
     } catch (err) {
       if (err.response?.status === 500) {
         toast.error(err.response.data, {
@@ -329,6 +330,7 @@ export const useDataStore = defineStore("data", () => {
           rtl: false,
         });
       }
+      return false;
     }
   };
 
