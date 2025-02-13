@@ -39,8 +39,6 @@ const submit = async () => {
     <section
       class="modal-container flex overflow-hidden flex-col items-start px-7 py-6 w-full bg-white rounded-3xl border-solid border-[3px] border-[color:var(--black,#1B1B1B)]"
     >
-      <p class="text-2xl tracking-wide text-zinc-900">寄放商品領取</p>
-
       <div
         class="flex flex-col justify-start mt-1 w-full text-lg leading-loose rounded max-w-[335px] text-zinc-900"
       >
@@ -209,6 +207,7 @@ const submit = async () => {
 
 .modal-container {
   width: 300px;
+  max-height: 100%;
   margin: auto;
   padding: 20px 30px;
   background-color: #fff;
