@@ -398,6 +398,7 @@ let model = {
       for (const p of data.Pickup) {
         counter += p.Amount;
       }
+      console.log(counter, amount, p.Amount);
 
       if (counter + amount > data.Amount)
         throw new Error("領取失敗，領取數量不可以比剩餘數量多");
