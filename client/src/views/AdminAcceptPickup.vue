@@ -19,7 +19,7 @@ watch(
 
 const submit = async () => {
   isLoading.value = true;
-  let result = await AddKeepPickup(props.params.id, amount.value);
+  let result = await AddKeepPickup(keepData.value.id, amount.value);
   isLoading.value = false;
   if (result) {
     router.push({ path: "/User/Search" });

@@ -315,12 +315,13 @@ let model = {
         throw new Error("此Keep ID不存在");
       }
       let data = docSnap.data();
+
       if (!("Item" in data)) {
         let item = await this.getItemById(data.ItemId);
         data.Item = item;
       }
 
-      return data;
+      return { id: docSnap.id, ...data };
     } catch (e) {
       throw new Error("取得寄放商品資料失敗：" + e.message);
     }
