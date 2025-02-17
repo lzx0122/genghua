@@ -62,6 +62,7 @@ const editKeephandler = (data) => {
         <div class="basis-auto">{{ AdminSearchUsersData[0].Account }}</div>
       </div>
     </div>
+    <div class="text-black mt-2">備註: {{ AdminSearchUsersData[0].Desc }}</div>
     <div
       class="flex items-center self-start mt-4 text-2xl leading-none text-center text-zinc-900"
       role="heading"
