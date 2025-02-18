@@ -3,3 +3,6 @@ server/node_modules
 
 clinet/node_modules
 **/.env
+
+linebot/node_modules
+**/.env
