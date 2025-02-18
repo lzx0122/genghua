@@ -37,7 +37,7 @@ async function handleEvent(event) {
     let profile = await client.getProfile(event.source.userId);
     const welcomeMessage = {
       type: "text",
-      text: $`${profile.displayName}\n${event.source.userId}\n歡迎光臨庚樺門市~`,
+      text: `${profile.displayName}\n${event.source.userId}\n歡迎光臨庚樺門市~`,
     };
     return client.replyMessage(event.replyToken, welcomeMessage);
   }
