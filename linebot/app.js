@@ -1,5 +1,9 @@
-import * as line from "@line/bot-sdk";
-import express from "express";
+// index.js
+const line = require("@line/bot-sdk");
+var express = require("express");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 // create LINE SDK config from env variables
 const config = {
@@ -17,7 +21,7 @@ const app = express();
 
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
-app.post("/webhook", line.middleware(config), (req, res) => {
+app.post("/callback", line.middleware(config), (req, res) => {
   Promise.all(req.body.events.map(handleEvent))
     .then((result) => res.json(result))
     .catch((err) => {
@@ -28,17 +32,8 @@ app.post("/webhook", line.middleware(config), (req, res) => {
 
 // event handler
 function handleEvent(event) {
-  if (event.type === "follow") {
-    // Handle the follow event when a user adds the bot as a friend
-    const welcomeMessage = {
-      type: "text",
-      text: "Thank you for adding me as a friend! How can I assist you today?",
-    };
-
-    return client.replyMessage(event.replyToken, welcomeMessage);
-  }
-
   if (event.type !== "message" || event.message.type !== "text") {
+    // ignore non-text-message event
     return Promise.resolve(null);
   }
 
