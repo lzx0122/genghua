@@ -39,7 +39,10 @@ async function handleEvent(event) {
       type: "text",
       text: `${profile.displayName}\n${event.source.userId}\n歡迎光臨庚樺門市~`,
     };
-    return client.replyMessage(event.replyToken, welcomeMessage);
+    return client.replyMessage({
+      replyToken: event.replyToken,
+      messages: [welcomeMessage],
+    });
   }
 
   if (event.type !== "message" || event.message.type !== "text") {
