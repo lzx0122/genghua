@@ -31,7 +31,17 @@ app.post("/callback", line.middleware(config), (req, res) => {
 });
 
 // event handler
-function handleEvent(event) {
+async function handleEvent(event) {
+  // 加好友事件
+  if (event.type === "follow") {
+    let profile = await client.getProfile(event.source.userId);
+    const welcomeMessage = {
+      type: "text",
+      text: $`${profile.displayName}\n${event.source.userId}\n歡迎光臨庚樺門市~`,
+    };
+    return client.replyMessage(event.replyToken, welcomeMessage);
+  }
+
   if (event.type !== "message" || event.message.type !== "text") {
     // ignore non-text-message event
     return Promise.resolve(null);
