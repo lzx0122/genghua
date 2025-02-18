@@ -37,7 +37,10 @@ async function handleEvent(event) {
     let profile = await client.getProfile(event.source.userId);
     const welcomeMessage = {
       type: "text",
-      text: `${profile.displayName}\n${event.source.userId}\n歡迎光臨庚樺門市~`,
+      text: `🎉 ${profile.displayName}，歡迎光臨庚樺門市！ 🎉
+👋 嗨！${profile.displayName}，很高興認識你～我是你的專屬小助手 🤖✨
+🔹 你可以隨時查詢可兌換的商品數量 📦
+🔹 紀錄你的商品數量與兌換時間 🕒`,
     };
     return client.replyMessage({
       replyToken: event.replyToken,
